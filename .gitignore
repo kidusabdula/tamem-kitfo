@@ -1,0 +1,16 @@
+node_modules
+.next
+out
+.env*.local
+.env
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+.vercel
+
+# Source photography: 120 MB of 6000x4000 originals.
+# Kept out of git; run `pnpm images` to regenerate assets/images from them.
+assets/source/
+
+# Design-review screenshots
+.screens/
