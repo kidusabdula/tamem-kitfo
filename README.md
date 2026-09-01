@@ -151,6 +151,75 @@ settings and history.
 
 ---
 
+---
+
+## Deployment
+
+| | |
+|---|---|
+| Production | https://tamem-kitfo.vercel.app |
+| Vercel scope | `versalabs-projects` / `tamem-kitfo` |
+| Repository | https://github.com/kidusabdula/tamem-kitfo |
+| Supabase project | `trudvcrsagptrwnktblr` |
+| Supabase region | `eu-west-1` (Ireland) |
+| Pooler host | `aws-1-eu-west-1.pooler.supabase.com:5432`, user `postgres.trudvcrsagptrwnktblr` |
+
+The direct `db.<ref>.supabase.co` host does not resolve over IPv4 on this
+project, which is normal for new Supabase projects — use the session pooler
+above for migrations.
+
+```bash
+npx supabase db push --db-url "postgresql://postgres.trudvcrsagptrwnktblr:<url-encoded-password>@aws-1-eu-west-1.pooler.supabase.com:5432/postgres"
+```
+
+The password must be **percent-encoded** in that URL. The one in use contains
+`&`, `?`, `/`, `@` and `+`, all of which change how the connection string
+parses if left raw.
+
+### Env var types on Vercel
+
+`NEXT_PUBLIC_SUPABASE_ANON_KEY` is stored as **Config**, not Secret. Vercel
+flags it because it looks like a credential, but the anon key is designed to
+ship inside the browser bundle — its safety comes from RLS, not from secrecy.
+`SUPABASE_SERVICE_ROLE_KEY`, `RATE_LIMIT_SALT` and `TELEGRAM_WEBHOOK_SECRET`
+are stored as **Secret**.
+
+### Verified against production
+
+Run after any schema change:
+
+- anon reads `dishes` and `site_settings`; is denied both `SELECT` and
+  `INSERT` on `orders`
+- an order posted with `{slug, quantity}` only is priced from the database
+  (2 x 680 + 450 = 1810)
+- an order posted with `price_etb: 1` for the 1450 ETB agelgil is stored at
+  **1450** — the client's number is discarded
+- order lookup with the right code and the wrong phone returns a generic 404,
+  not "wrong phone"
+
+---
+
+## Still to do before handing this to the owners
+
+1. **Create a staff account.** Nothing can sign in to `/admin` until an auth
+   user exists *and* has a matching `staff_profiles` row. See "Setting up
+   Supabase" above.
+2. **Disable public signup** in the Supabase dashboard. Someone who signs up
+   without a `staff_profiles` row is already harmless — RLS returns nothing and
+   the CMS tells them they are not staff — but there is no reason to allow it.
+3. **Telegram bot.** Not yet configured, so orders save to the database but no
+   card is posted. Add `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`, then
+   register the webhook using the command in `.env.example`.
+   `TELEGRAM_WEBHOOK_SECRET` is already generated and set on Vercel.
+4. **Rotate the database password.** It was shared over a chat transcript
+   during setup. Rotating it does not affect the running site — the app
+   connects with the JWT keys, not the password.
+5. **Custom domain.** `NEXT_PUBLIC_SITE_URL` currently points at the
+   `.vercel.app` URL and feeds canonical tags, hreflang, the sitemap and the
+   Open Graph image. Update it when the real domain is attached.
+6. **Answer the question sheet** — every price, phone number, address and
+   opening hour on the site is still a placeholder.
+
 ## Known gaps
 
 - No online payment. Orders are requests; staff confirm by phone. Telebirr or
