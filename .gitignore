@@ -14,3 +14,9 @@ assets/source/
 
 # Design-review screenshots
 .screens/
+
+.vercel
+.env*
+
+# Local credential scratch file - never commit
+pat.txt

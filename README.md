@@ -201,15 +201,23 @@ Run after any schema change:
 
 ## Still to do before handing this to the owners
 
-1. **Create a staff account.** Nothing can sign in to `/admin` until an auth
-   user exists *and* has a matching `staff_profiles` row. See "Setting up
-   Supabase" above.
-2. **Disable public signup** in the Supabase dashboard. Someone who signs up
-   without a `staff_profiles` row is already harmless — RLS returns nothing and
-   the CMS tells them they are not staff — but there is no reason to allow it.
-3. **Telegram bot.** Not yet configured, so orders save to the database but no
-   card is posted. Add `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`, then
-   register the webhook using the command in `.env.example`.
+1. ~~**Create a staff account.**~~ Done — `kidus489@gmail.com`, role `owner`.
+   Sign-in and staff-level RLS access were both verified against production.
+   Additional staff are created from `/admin` by an `owner`.
+2. **Disable public signup** in the Supabase dashboard. Verified still enabled:
+   a signup attempt returns `over_email_send_rate_limit` (i.e. accepted and
+   trying to send a confirmation) rather than `signup_disabled`. Someone who
+   signs up without a `staff_profiles` row is already harmless — RLS returns
+   nothing and the CMS tells them they are not staff — but there is no reason
+   to allow it.
+3. **Telegram bot.** `TELEGRAM_BOT_TOKEN` is set on Vercel (bot
+   `@tamem_kitfo_bot`, token verified live via `getMe`). Still missing
+   `TELEGRAM_CHAT_ID` — the bot has not been added to a staff group yet, so
+   `getUpdates` is empty. Until that is set, orders save to the database but no
+   card is posted. Note the bot's privacy mode is **on**
+   (`can_read_all_group_messages: false`), which is fine for posting but means
+   `getUpdates` will not show ordinary group chatter. After setting the chat
+   ID, register the webhook using the command in `.env.example`.
    `TELEGRAM_WEBHOOK_SECRET` is already generated and set on Vercel.
 4. **Rotate the database password.** It was shared over a chat transcript
    during setup. Rotating it does not affect the running site — the app
