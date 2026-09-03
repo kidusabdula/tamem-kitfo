@@ -38,8 +38,11 @@ export function OpenStatus({
   return (
     <span
       className={cn(
+        // Text inherits the surrounding theme. Carrying its own dark-cream
+        // colour here made the badge unreadable on espresso (the footer) and
+        // nearly invisible against cream (the contact page) — colour is now
+        // the dot's job, not the text's.
         'inline-flex items-center gap-2 text-sm font-medium',
-        state.isOpen ? 'text-gomen' : 'text-ink-subtle',
         className,
       )}
     >
@@ -51,7 +54,11 @@ export function OpenStatus({
         )}
       />
       {state.isOpen ? labels.open : labels.closed}
-      {state.until ? <span className="text-ink-subtle tabular-nums">· {state.until}</span> : null}
+      {state.until ? (
+        // Dimmed through opacity so it stays legible in every theme it
+        // inherits — brown-500 failed on the espresso footer.
+        <span className="opacity-70 tabular-nums">· {state.until}</span>
+      ) : null}
     </span>
   )
 }

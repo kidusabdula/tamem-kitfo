@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowRight, Flame, MapPin, Soup, Sparkles, UtensilsCrossed } from 'lucide-react'
+import { ArrowRight, ChevronDown, Flame, MapPin, Soup, Sparkles, UtensilsCrossed } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Reveal, KenBurns } from '@/components/ui/reveal'
@@ -15,6 +15,7 @@ import { RestaurantSchema } from '@/components/site/restaurant-schema'
 import { makeCopy } from '@/lib/content/editable'
 import {
   cateringPhoto,
+  diningPhoto,
   eventsPhoto,
   heroPhoto,
   resolveSquareImage,
@@ -77,6 +78,9 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
             placeholder="blur"
           />
         </KenBurns>
+        {/* Built for the hero and never wired up in iteration 1 — a faint
+            multiply-blend noise keeps large photo areas from banding. */}
+        <div className="grain-overlay" aria-hidden="true" />
         <div className="photo-scrim absolute inset-0" />
         <div className="photo-scrim-top absolute inset-x-0 top-0 h-44" />
 
@@ -117,6 +121,24 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
               ) : null}
             </div>
           </Reveal>
+        </div>
+
+        {/* Scroll cue. `home.scrollHint` existed in both dictionaries but was
+            never rendered — the design intended a cue and never shipped one.
+            aria-hidden: it duplicates the page's natural scroll affordance. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 bottom-4 hidden justify-center md:flex"
+        >
+          <div
+            className="flex flex-col items-center gap-2 text-ember-300"
+            style={{ animation: 'drift-down 2.4s var(--ease-in-out-soft) infinite' }}
+          >
+            <span className="text-[0.625rem] font-semibold tracking-[0.22em] uppercase">
+              {t.scrollHint}
+            </span>
+            <ChevronDown className="size-4" />
+          </div>
         </div>
       </section>
 
@@ -315,10 +337,13 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
             </Reveal>
           </div>
 
+          {/* diningPhoto, not eventsPhoto — the hall shot already fronts the
+              events panel above; repeating it two sections later read as a
+              mistake, not a motif. */}
           <Reveal index={2} className="relative aspect-16/11 overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-lift)]">
             <Image
-              src={eventsPhoto}
-              alt={dict.events.spaces.hall.title}
+              src={diningPhoto}
+              alt={dict.events.spaces.mesob.title}
               fill
               sizes="(min-width: 1024px) 50vw, 90vw"
               className="object-cover"

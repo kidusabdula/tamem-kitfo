@@ -222,6 +222,14 @@
   line-height: 1.15;
 }
 
+/* Ethiopic display type needs more air than the Latin display utilities
+   give it — Ge'ez vowel marks crowd and clip at 0.98–1.15 line-height.
+   Kept unlayered on purpose: unlayered rules beat Tailwind's utilities
+   layer regardless of specificity, which is what the override needs. */
+[lang='am'] :is(.display-xl, .display-lg, .display-md) {
+  line-height: 1.2;
+}
+
 /* The one place photography meets type: a warm scrim that keeps
    text legible over any of the restaurant photos. */
 @utility photo-scrim {
@@ -258,4 +266,16 @@
   opacity: 0.035;
   mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Hero scroll-cue drift. Purely decorative — the global
+   prefers-reduced-motion rule already flattens it to a no-op. */
+@keyframes drift-down {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
 }
