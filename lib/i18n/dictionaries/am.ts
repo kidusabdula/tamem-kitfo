@@ -12,7 +12,7 @@ export const am: Dictionary = {
   },
 
   brand: {
-    name: 'ተመም ክትፎ',
+    name: 'ታሜም ክትፎ',
     tagline: 'ታዋቂው የጉራጌ ምግብ ቤት',
     branch: 'ቦሌ ቅርንጫፍ',
   },
@@ -259,7 +259,7 @@ export const am: Dictionary = {
 
   gallery: {
     title: 'ፎቶዎች',
-    eyebrow: 'የተመም ቅጽበቶች',
+    eyebrow: 'የታሜም ቅጽበቶች',
     filters: {
       all: 'ሁሉም',
       food: 'ምግቦች',
@@ -334,7 +334,7 @@ export const am: Dictionary = {
   },
 
   admin: {
-    title: 'ተመም ክትፎ — ሠራተኞች',
+    title: 'ታሜም ክትፎ — ሠራተኞች',
     signIn: 'ግባ',
     signingIn: 'በመግባት ላይ…',
     signOut: 'ውጣ',

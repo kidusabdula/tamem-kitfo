@@ -45,7 +45,7 @@ export const fixtureDishes: Dish[] = [
     category_id: 'cat-kitfo',
     slug: 'tamem-special-kitfo',
     name_en: 'Tamem Special Kitfo',
-    name_am: 'የተመም ልዩ ክትፎ',
+    name_am: 'የታሜም ልዩ ክትፎ',
     description_en:
       'Prime beef minced by hand and folded through our own niter kibbeh and mitmita. Served with fresh ayib, gomen and warm kocho. Ask for it tire, leb-leb or fully cooked.',
     description_am:
@@ -77,7 +77,7 @@ export const fixtureDishes: Dish[] = [
     category_id: 'cat-kitfo',
     slug: 'tamem-special-dulet',
     name_en: 'Tamem Special Dulet',
-    name_am: 'የተመም ልዩ ዱለት',
+    name_am: 'የታሜም ልዩ ዱለት',
     description_en:
       'Tripe, liver and lean beef chopped fine and sauteed with green pepper, onion, niter kibbeh and mitmita.',
     description_am:
@@ -120,7 +120,7 @@ export const fixtureDishes: Dish[] = [
     category_id: 'cat-tibs',
     slug: 'royal-agelgil',
     name_en: 'Royal Agelgil',
-    name_am: 'የተመም አገልግል',
+    name_am: 'የታሜም አገልግል',
     description_en:
       'A feast for the table, served inside a traditional leather agelgil wrapped in enset leaves: kitfo, tibs, doro wat, ayib and kocho.',
     description_am:
@@ -207,7 +207,7 @@ export const fixtureSettings: SiteSettings = {
  * starting with "local:" as a bundled asset.
  */
 export const fixtureGallery: GalleryImage[] = [
-  { id: 'g1', storage_path: 'local:kitfo-pro', alt_en: 'Tamem special kitfo served in enset leaf', alt_am: 'የተመም ልዩ ክትፎ በእንሰት ቅጠል ላይ', category: 'food', sort_order: 10, is_published: true, created_at: now },
+  { id: 'g1', storage_path: 'local:kitfo-pro', alt_en: 'Tamem special kitfo served in enset leaf', alt_am: 'የታሜም ልዩ ክትፎ በእንሰት ቅጠል ላይ', category: 'food', sort_order: 10, is_published: true, created_at: now },
   { id: 'g2', storage_path: 'local:kitfo-pro-2', alt_en: 'Gurage kitfo in a traditional clay bowl', alt_am: 'የጉራጌ ክትፎ በባህላዊ ሸክላ', category: 'food', sort_order: 20, is_published: true, created_at: now },
   { id: 'g3', storage_path: 'local:kitfo-4', alt_en: 'Niter kibbeh poured from a clay jebena', alt_am: 'ንጥር ቅቤ ከሸክላ ማሰሮ ሲፈስ', category: 'food', sort_order: 30, is_published: true, created_at: now },
   { id: 'g4', storage_path: 'local:kitfo-serve', alt_en: 'Kitfo served on a woven mesob', alt_am: 'ክትፎ በመሶብ ላይ ሲቀርብ', category: 'food', sort_order: 40, is_published: true, created_at: now },
