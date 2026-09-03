@@ -19,7 +19,7 @@
 
 insert into gallery_images (storage_path, alt_en, alt_am, category, sort_order, is_published)
 select * from (values
-  ('local:kitfo-pro',   'Tamem special kitfo served in enset leaf',           'የተመም ልዩ ክትፎ በእንሰት ቅጠል ላይ',              'food'::gallery_category,   10, true),
+  ('local:kitfo-pro',   'Tamem special kitfo served in enset leaf',           'የታሜም ልዩ ክትፎ በእንሰት ቅጠል ላይ',              'food'::gallery_category,   10, true),
   ('local:kitfo-pro-2', 'Gurage kitfo in a traditional clay bowl',            'የጉራጌ ክትፎ በባህላዊ ሸክላ',                    'food'::gallery_category,   20, true),
   ('local:kitfo-4',     'Niter kibbeh poured from a clay jebena',             'ንጥር ቅቤ ከሸክላ ማሰሮ ሲፈስ',                   'food'::gallery_category,   30, true),
   ('local:kitfo-serve', 'Kitfo served on a woven mesob',                      'ክትፎ በመሶብ ላይ ሲቀርብ',                      'food'::gallery_category,   40, true),

@@ -52,7 +52,7 @@ export function RestaurantSchema({
     '@context': 'https://schema.org',
     '@type': 'Restaurant',
     name: 'Tamem Kitfo',
-    alternateName: 'ተመም ክትፎ',
+    alternateName: 'ታሜም ክትፎ',
     description:
       locale === 'am'
         ? 'በቦሌ የሚገኘው ታዋቂው የጉራጌ ክትፎ ቤት።'

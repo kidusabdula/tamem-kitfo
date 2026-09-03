@@ -25,7 +25,7 @@ insert into dishes (
   (
     'tamem-special-kitfo',
     (select id from menu_categories where slug = 'kitfo'),
-    'Tamem Special Kitfo', 'የተመም ልዩ ክትፎ',
+    'Tamem Special Kitfo', 'የታሜም ልዩ ክትፎ',
     'Prime beef minced by hand and folded through our own niter kibbeh and mitmita. Served with fresh ayib, gomen and warm kocho. Ask for it tire, leb-leb or fully cooked.',
     'በእጅ ተከትፎ በራሳችን ንጥር ቅቤና ሚጥሚጣ የተለወሰ ምርጥ የበሬ ሥጋ። ከትኩስ አይብ፣ ጎመንና ትኩስ ቆጮ ጋር ይቀርባል። ጥሬ፣ ልብ ልብ ወይም የበሰለ ሆኖ ይዘጋጃል።',
     680, 3, '{signature}', true, 10
@@ -41,7 +41,7 @@ insert into dishes (
   (
     'tamem-special-dulet',
     (select id from menu_categories where slug = 'kitfo'),
-    'Tamem Special Dulet', 'የተመም ልዩ ዱለት',
+    'Tamem Special Dulet', 'የታሜም ልዩ ዱለት',
     'Tripe, liver and lean beef chopped fine and sauteed with green pepper, onion, niter kibbeh and mitmita.',
     'ሰንበር፣ ጉበትና ዘንጋዳ ሥጋ በጥሩ ተከትፎ ከአረንጓዴ በርበሬ፣ ሽንኩርት፣ ንጥር ቅቤና ሚጥሚጣ ጋር ይጠበሳል።',
     540, 2, '{}', true, 30
@@ -65,7 +65,7 @@ insert into dishes (
   (
     'royal-agelgil',
     (select id from menu_categories where slug = 'tibs'),
-    'Royal Agelgil', 'የተመም አገልግል',
+    'Royal Agelgil', 'የታሜም አገልግል',
     'A feast for the table, served inside a traditional leather agelgil wrapped in enset leaves: kitfo, tibs, doro wat, ayib and kocho.',
     'ለማዕድ የሚሆን ድግስ፤ በእንሰት ቅጠል ተጠቅልሎ በባህላዊ አገልግል ውስጥ ይቀርባል፦ ክትፎ፣ ጥብስ፣ ዶሮ ወጥ፣ አይብና ቆጮ።',
     1450, 2, '{sharing}', true, 20

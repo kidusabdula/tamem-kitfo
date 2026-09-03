@@ -66,9 +66,9 @@ practice. It reads well but it is not *your* story yet.
 
 | # | English | አማርኛ |
 |---|---|---|
-| 21 | What year did Tamem open? | ተመም መቼ ተከፈተ? |
+| 21 | What year did Tamem open? | ታሜም መቼ ተከፈተ? |
 | 22 | Who founded it? | ማን መሠረተው? |
-| 23 | Where does the name Tamem come from? | «ተመም» የሚለው ስም ከየት መጣ? |
+| 23 | Where does the name Tamem come from? | «ታሜም» የሚለው ስም ከየት መጣ? |
 | 24 | What do regulars say you do better than anyone? | ቋሚ ደንበኞች ከሁሉ በላይ የሚያደንቁት ምንድን ነው? |
 | 25 | Anything in the story text that is simply wrong? | በታሪኩ ጽሑፍ ውስጥ የተሳሳተ ነገር አለ? |
 
