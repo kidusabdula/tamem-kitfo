@@ -124,7 +124,15 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dictionary 
         </nav>
 
         <div className="flex items-center gap-1.5">
-          <Link
+          {/*
+            A plain anchor, not <Link>: client-side navigation between /am/*
+            and /en/* shares the [lang] layout, so the header, footer and
+            <html lang> would keep the old language while only the page body
+            flips. A full document load updates everything, costs one request
+            against a statically prerendered page, and the cart survives it in
+            localStorage.
+          */}
+          <a
             href={swapLocale(pathname, otherLocale)}
             hrefLang={otherLocale}
             aria-label={dict.nav.switchLanguage}
@@ -136,7 +144,7 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dictionary 
             )}
           >
             {dict.meta.switchTo}
-          </Link>
+          </a>
 
           <Link
             href={routes.order(locale)}
@@ -179,7 +187,7 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dictionary 
           'fixed inset-0 z-50 bg-espresso transition-opacity duration-300 lg:hidden',
           open ? 'opacity-100' : 'pointer-events-none opacity-0',
         )}
-        {...(open ? {} : { inert: '' as unknown as boolean })}
+        inert={!open}
       >
         <div className="container-page flex h-18 items-center justify-between">
           <span className="font-display text-lg font-semibold text-cream-50">
