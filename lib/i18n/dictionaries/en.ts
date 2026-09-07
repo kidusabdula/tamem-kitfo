@@ -215,6 +215,56 @@ export const en = {
         body: 'Green beans roasted in the room, with frankincense and popcorn, run properly to three rounds.',
       },
     },
+    process: {
+      eyebrow: 'How it works',
+      title: 'From the first call to the last cup',
+      body: 'Four steps, and we carry everything in between.',
+      steps: {
+        ask: {
+          title: 'Tell us the day',
+          body: 'The date, roughly how many guests, and where. A phone call is usually quicker than the form and reaches the same people.',
+        },
+        menu: {
+          title: 'We build the menu',
+          body: 'We talk through the dishes, how much of each, and the fasting options your guests will need. Nothing is fixed until it sounds right to you.',
+        },
+        setup: {
+          title: 'We arrive and set up',
+          body: 'Chefs, clay pans, mesob and the coffee station travel with us. We are in place and ready before the first guest walks in.',
+        },
+        serve: {
+          title: 'We serve, then clear away',
+          body: 'The kitfo is mixed in front of your guests and the coffee runs to the third round. Afterwards the kitchen goes back into the van and your space is left as we found it.',
+        },
+      },
+    },
+    occasions: {
+      eyebrow: 'What we cater',
+      title: 'Gatherings we know well',
+      body: 'Every room has its own rhythm. These are the ones this kitchen has cooked for the longest.',
+      items: {
+        wedding: {
+          title: 'Weddings',
+          body: 'The long table, the agelgil, and enough kitfo that nobody counts. We work alongside your hall and keep the coffee going while the speeches run over.',
+        },
+        mahiber: {
+          title: 'Mahiber',
+          body: 'A monthly gathering has its own order of service. We cook to it rather than around it, and we know when to stay out of the way.',
+        },
+        corporate: {
+          title: 'Office & corporate',
+          body: 'A lunch that arrives on time and does not need a second hour. Good for a team day, a launch, or visitors you want to feed properly.',
+        },
+        birthday: {
+          title: 'Birthdays',
+          body: 'Smaller rooms, family and neighbours, and a menu that suits both the elders and the children at the same table.',
+        },
+        memorial: {
+          title: 'Memorials',
+          body: 'Tezkar asks for quiet, generous food and no fuss from the people serving it. We arrive early, work softly, and leave when it is finished.',
+        },
+      },
+    },
     formTitle: 'Tell us about your event',
     eventType: 'What is the occasion?',
     eventTypes: {
@@ -282,6 +332,7 @@ export const en = {
     closedNow: 'Closed now',
     everyDay: 'Every day',
     mapCta: 'Open in Google Maps',
+    mapTitle: 'Find us',
     formTitle: 'Send us a message',
     yourMessage: 'Your message',
     successTitle: 'Message sent',
