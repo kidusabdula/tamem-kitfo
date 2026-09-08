@@ -26,8 +26,12 @@ export const orderSchema = z
     name: nameSchema,
     phone: phoneSchema,
     fulfilment_type: z.enum(['dine_in', 'pickup', 'delivery']),
-    scheduled_for: z.string().optional().transform((v) => v || null),
-    delivery_address: z.string().trim().max(400).optional().transform((v) => v || null),
+    // `.nullish()` on every optional field that transforms to null — the
+    // client-side resolver runs this schema first and sends the transformed
+    // output back in, so the server must accept its own nulls. (See
+    // notesSchema in ./common for the full story.)
+    scheduled_for: z.string().nullish().transform((v) => v || null),
+    delivery_address: z.string().trim().max(400).nullish().transform((v) => v || null),
     notes: notesSchema,
     items: z.array(orderItemSchema).min(1, { message: 'cartEmpty' }),
     locale: localeSchema,
@@ -92,7 +96,7 @@ export type BookingPayload = z.output<typeof bookingSchema>
 
 export const contactSchema = z.object({
   name: nameSchema,
-  phone: z.string().trim().max(40).optional().transform((v) => v || null),
+  phone: z.string().trim().max(40).nullish().transform((v) => v || null),
   email: optionalEmailSchema,
   message: z
     .string({ message: 'messageRequired' })

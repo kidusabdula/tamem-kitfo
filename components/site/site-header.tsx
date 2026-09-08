@@ -48,10 +48,16 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dictionary 
   return (
     <header
       className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-300',
+        // No backdrop-filter anywhere in here: a blurred fixed bar is the
+        // single most paint-fragile pattern on mobile browsers (Chromium and
+        // WebKit both have shipped bugs where the bar computes solid but
+        // never paints — the invisible-navbar report). A fully opaque token
+        // background + border + warm shadow paints unconditionally, and the
+        // border carries the same "frosted edge" read.
+        'fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,border-color] duration-300',
         solid
-          ? 'bg-canvas/92 shadow-[0_1px_0_var(--color-hairline)] backdrop-blur-md'
-          : 'bg-transparent',
+          ? 'border-b border-brown-200 bg-canvas shadow-[var(--shadow-card)]'
+          : 'border-b border-transparent bg-transparent',
       )}
     >
       <div className="container-page flex h-18 items-center justify-between gap-4">
@@ -61,10 +67,12 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dictionary 
           aria-label={dict.brand.name}
         >
           {/*
-            The logo file has a white background and no alpha channel.
-            `mix-blend-multiply` drops the white against any lighter surface,
-            which is why the header never goes darker than cream.
-            Replace with an SVG when the owners supply one.
+            The logo file has a white background and no alpha channel. The
+            mix-blend-multiply trick is gone: blend modes on a child of a
+            fixed + backdrop-filter header are a known paint-bug cocktail on
+            mobile Chromium (header computes solid but never paints — invisible
+            navbar). The white box is harmless at 44px; the solid band is what
+            carries legibility. Replace with an SVG when the owners supply one.
           */}
           <Image
             src={logoMark}
@@ -72,10 +80,7 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dictionary 
             width={44}
             height={44}
             priority
-            className={cn(
-              'size-11 object-contain mix-blend-multiply',
-              !solid && 'rounded-full bg-cream-50/95 p-0.5 mix-blend-normal',
-            )}
+            className={cn('size-11 object-contain', !solid && 'rounded-full bg-cream-50/95 p-0.5')}
           />
           <span className="hidden sm:block">
             <span

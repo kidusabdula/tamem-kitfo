@@ -333,6 +333,7 @@ export const en = {
     everyDay: 'Every day',
     mapCta: 'Open in Google Maps',
     mapTitle: 'Find us',
+    mapTitle: 'Find us',
     formTitle: 'Send us a message',
     yourMessage: 'Your message',
     successTitle: 'Message sent',

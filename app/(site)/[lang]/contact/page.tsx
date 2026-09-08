@@ -8,6 +8,7 @@ import { Section } from '@/components/ui/section'
 import { DiamondRule } from '@/components/ui/tibeb'
 import { PlainHero } from '@/components/site/page-hero'
 import { OpenStatus } from '@/components/site/open-status'
+import { MapEmbed } from '@/components/site/map-embed'
 import { ContactForm } from '@/components/site/forms/contact-form'
 import { getSettings } from '@/lib/data/queries'
 import { getDictionary, isLocale, pick, type Locale } from '@/lib/i18n/config'
@@ -121,6 +122,17 @@ export default async function ContactPage({ params }: { params: Promise<{ lang: 
               locale={locale}
               dict={dict}
               whatsappNumber={settings.whatsapp_number ?? settings.phones[0] ?? null}
+            />
+          </Reveal>
+        </div>
+
+        {/* Small map below the two columns — full width, stacked last so it
+            never pushes the form below the fold on mobile. */}
+        <div className="container-page">
+          <Reveal index={2} className="mt-12">
+            <MapEmbed
+              query={`Tamem Kitfo Bole Branch, ${pick(settings, 'address', 'en')}`}
+              title={dict.contact.mapTitle}
             />
           </Reveal>
         </div>
