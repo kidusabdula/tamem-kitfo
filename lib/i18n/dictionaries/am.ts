@@ -333,6 +333,7 @@ export const am: Dictionary = {
     everyDay: 'በየቀኑ',
     mapCta: 'በጉግል ካርታ ይክፈቱ',
     mapTitle: 'የሚገኘው ቦታ',
+    mapTitle: 'የሚገኘው ቦታ',
     formTitle: 'መልእክት ይላኩልን',
     yourMessage: 'መልእክትዎ',
     successTitle: 'መልእክቱ ተልኳል',
