@@ -7,6 +7,8 @@ import { Field, Honeypot, Input, Select, Textarea } from '@/components/ui/field'
 import { FormCard, FormError, SuccessPanel, useMinDateTime } from './shared'
 import { cateringSchema, type CateringInput } from '@/lib/schemas/forms'
 import { useSubmit } from '@/lib/forms/use-submit'
+import { useRecordRequest } from '@/lib/requests/use-record-request'
+import { routes } from '@/lib/routes'
 import type { Dictionary, Locale } from '@/lib/i18n/config'
 
 export function CateringForm({
@@ -19,7 +21,7 @@ export function CateringForm({
   whatsappNumber: string | null
 }) {
   const min = useMinDateTime()
-  const { submit, status, error, isSubmitting, isSuccess } = useSubmit<CateringInput>(
+  const { submit, status, error, result, isSubmitting, isSuccess } = useSubmit<CateringInput>(
     '/api/catering',
     dict,
   )
@@ -38,8 +40,27 @@ export function CateringForm({
   const v = dict.form.validation as Record<string, string | undefined>
   const msg = (key?: string) => (key ? (v[key] ?? key) : undefined)
 
+  useRecordRequest({
+    kind: 'catering',
+    isSuccess,
+    code: result?.code,
+    phone: getValues('phone'),
+  })
+
   if (isSuccess) {
-    return <SuccessPanel title={dict.catering.successTitle} body={dict.catering.successBody} />
+    // The API has always returned a CAT- code and this panel never showed it,
+    // so a catering customer had no way to ask about their own enquiry.
+    return (
+      <SuccessPanel
+        title={dict.catering.successTitle}
+        body={dict.catering.successBody}
+        code={result?.code}
+        codeLabel={dict.order.yourCode}
+        codeHint={dict.order.codeHint}
+        trackHref={result?.code ? routes.requestStatus(locale, result.code) : undefined}
+        trackLabel={dict.requests.track}
+      />
+    )
   }
 
   const fallbackText = () => {

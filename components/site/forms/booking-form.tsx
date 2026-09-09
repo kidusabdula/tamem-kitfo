@@ -7,6 +7,8 @@ import { Field, Honeypot, Input, Textarea } from '@/components/ui/field'
 import { FormCard, FormError, SuccessPanel, useMinDateTime } from './shared'
 import { bookingSchema, type BookingInput } from '@/lib/schemas/forms'
 import { useSubmit } from '@/lib/forms/use-submit'
+import { useRecordRequest } from '@/lib/requests/use-record-request'
+import { routes } from '@/lib/routes'
 import type { Dictionary, Locale } from '@/lib/i18n/config'
 
 export function BookingForm({
@@ -37,6 +39,13 @@ export function BookingForm({
   const v = dict.form.validation as Record<string, string | undefined>
   const msg = (key?: string) => (key ? (v[key] ?? key) : undefined)
 
+  useRecordRequest({
+    kind: 'booking',
+    isSuccess,
+    code: result?.code,
+    phone: getValues('phone'),
+  })
+
   if (isSuccess) {
     return (
       <SuccessPanel
@@ -45,6 +54,8 @@ export function BookingForm({
         code={result?.code}
         codeLabel={dict.order.yourCode}
         codeHint={dict.order.codeHint}
+        trackHref={result?.code ? routes.requestStatus(locale, result.code) : undefined}
+        trackLabel={dict.requests.track}
       />
     )
   }

@@ -14,6 +14,10 @@ export const routes = {
   gallery: (l: Locale) => `/${l}/gallery`,
   contact: (l: Locale) => `/${l}/contact`,
   order: (l: Locale) => `/${l}/order`,
+  /** Orders, catering enquiries and bookings all resolve through one page. */
+  requests: (l: Locale) => `/${l}/status`,
+  requestStatus: (l: Locale, code: string) => `/${l}/status/${code}`,
+  /** Superseded by requestStatus. Kept because codes are already in the wild. */
   orderStatus: (l: Locale, code: string) => `/${l}/order/${code}`,
   book: (l: Locale) => `/${l}/book`,
 } as const
