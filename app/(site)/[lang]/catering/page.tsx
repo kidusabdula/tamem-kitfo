@@ -6,7 +6,7 @@ import { Section, SectionHeading } from '@/components/ui/section'
 import { Reveal } from '@/components/ui/reveal'
 import { PageHero } from '@/components/site/page-hero'
 import { CateringForm } from '@/components/site/forms/catering-form'
-import { getContentOverrides, getSettings } from '@/lib/data/queries'
+import { getContentOverrides, getDishes, getSettings } from '@/lib/data/queries'
 import { makeCopy } from '@/lib/content/editable'
 import { cateringPhoto } from '@/lib/data/images'
 import { getDictionary, isLocale, type Locale } from '@/lib/i18n/config'
@@ -36,8 +36,16 @@ export default async function CateringPage({ params }: { params: Promise<{ lang:
   if (!isLocale(lang)) notFound()
   const locale = lang as Locale
   const dict = getDictionary(locale)
-  const [settings, overrides] = await Promise.all([getSettings(), getContentOverrides()])
+  const [settings, overrides, dishes] = await Promise.all([getSettings(), getContentOverrides(), getDishes()])
   const copy = makeCopy(overrides, dict, locale)
+
+  // Display names resolve per locale here, so the picker component stays
+  // locale-agnostic. The slug is what travels; the server re-resolves and
+  // snapshots the name itself.
+  const picks = dishes.map((dish) => ({
+    slug: dish.slug,
+    name: (locale === 'am' ? dish.name_am || dish.name_en : dish.name_en),
+  }))
 
   const features = [
     { icon: ChefHat, ...dict.catering.features.live },
@@ -155,6 +163,7 @@ export default async function CateringPage({ params }: { params: Promise<{ lang:
             locale={locale}
             dict={dict}
             whatsappNumber={settings.whatsapp_number ?? settings.phones[0] ?? null}
+            dishes={picks}
           />
         </div>
       </Section>

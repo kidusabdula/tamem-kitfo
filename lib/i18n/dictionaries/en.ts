@@ -329,6 +329,9 @@ export const en = {
     location: 'Where is it?',
     message: 'Anything else',
     email: 'Email (optional)',
+    dishesTitle: 'Dishes you would like',
+    dishesHint:
+      'Optional. Rough amounts are fine — we confirm exact quantities and price together by phone.',
     successTitle: 'Enquiry sent',
     successBody: 'Our catering team will call you to talk through the menu and pricing.',
   },
@@ -500,6 +503,7 @@ export const en = {
       guests: 'Guests',
       location: 'Location',
       message: 'Message',
+      dishes: 'Requested dishes',
       status: 'Status',
       empty: 'No inquiries yet.',
       statuses: {

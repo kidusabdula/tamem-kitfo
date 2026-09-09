@@ -320,6 +320,8 @@ export const am: Dictionary = {
     location: 'የት ነው?',
     message: 'ተጨማሪ መረጃ',
     email: 'ኢሜይል (አማራጭ)',
+    dishesTitle: 'የሚፈልጉት ምግቦች',
+    dishesHint: 'አማራጭ ነው። በግምት ያህል ብቻ ይምረጡ — ትክክለኛውን ብዛትና ዋጋውን በስልክ አንድ ላይ እናሳራለን።',
     successTitle: 'ጥያቄዎ ተልኳል',
     successBody: 'የኬተሪንግ ቡድናችን ስለ ምናሌውና ዋጋው ለመነጋገር ይደውልልዎታል።',
   },
@@ -491,6 +493,7 @@ export const am: Dictionary = {
       guests: 'እንግዶች',
       location: 'ቦታ',
       message: 'መልእክት',
+      dishes: 'የተጠየቁ ምግቦች',
       status: 'ሁኔታ',
       empty: 'እስካሁን ጥያቄ የለም።',
       statuses: {

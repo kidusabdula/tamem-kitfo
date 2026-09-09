@@ -1,10 +1,12 @@
 'use client'
 
+import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
 import { Button } from '@/components/ui/button'
 import { Field, Honeypot, Input, Select, Textarea } from '@/components/ui/field'
 import { FormCard, FormError, SuccessPanel, useMinDateTime } from './shared'
+import { CateringDishPicker, type CateringPick } from './catering-dish-picker'
 import { cateringSchema, type CateringInput } from '@/lib/schemas/forms'
 import { useSubmit } from '@/lib/forms/use-submit'
 import { useRecordRequest } from '@/lib/requests/use-record-request'
@@ -15,16 +17,24 @@ export function CateringForm({
   locale,
   dict,
   whatsappNumber,
+  dishes,
 }: {
   locale: Locale
   dict: Dictionary
   whatsappNumber: string | null
+  /** Available dishes, display name already locale-resolved by the page. */
+  dishes: CateringPick[]
 }) {
   const min = useMinDateTime()
   const { submit, status, error, result, isSubmitting, isSuccess } = useSubmit<CateringInput>(
     '/api/catering',
     dict,
   )
+
+  // slug -> quantity. Kept outside RHF: the picker is its own concern, and
+  // the array is assembled at submit time (`null` from the resolver's
+  // nullish transform is overridden by the spread order).
+  const [picks, setPicks] = React.useState<Record<string, number>>({})
 
   const {
     register,
@@ -65,6 +75,9 @@ export function CateringForm({
 
   const fallbackText = () => {
     const values = getValues()
+    const pickedLines = dishes
+      .filter((dish) => (picks[dish.slug] ?? 0) > 0)
+      .map((dish) => `• ${picks[dish.slug]} × ${dish.name}`)
     return [
       `${dict.catering.title} — ${dict.brand.name}`,
       `${dict.order.name}: ${values.name ?? ''}`,
@@ -72,6 +85,8 @@ export function CateringForm({
       `${dict.catering.eventDate}: ${values.event_date ?? ''}`,
       `${dict.catering.guestCount}: ${values.guest_count ?? ''}`,
       `${dict.catering.location}: ${values.location ?? ''}`,
+      pickedLines.length > 0 ? `${dict.catering.dishesTitle}:` : '',
+      ...pickedLines,
       values.message ? `${dict.catering.message}: ${values.message}` : '',
     ]
       .filter(Boolean)
@@ -80,7 +95,16 @@ export function CateringForm({
 
   return (
     <FormCard title={dict.catering.formTitle}>
-      <form onSubmit={handleSubmit((data) => submit(data))} className="flex flex-col gap-5" noValidate>
+      <form
+        onSubmit={handleSubmit((data) =>
+          submit({
+            ...data,
+            items: Object.entries(picks).map(([slug, quantity]) => ({ slug, quantity })),
+          }),
+        )}
+        className="flex flex-col gap-5"
+        noValidate
+      >
         <Honeypot register={register('website')} />
 
         <div className="grid gap-5 sm:grid-cols-2">
@@ -181,6 +205,8 @@ export function CateringForm({
         >
           <Input id="location" aria-invalid={Boolean(errors.location)} {...register('location')} />
         </Field>
+
+        <CateringDishPicker dishes={dishes} dict={dict} value={picks} onChange={setPicks} />
 
         <Field
           label={dict.catering.message}
