@@ -18,13 +18,33 @@ export default async function AdminCateringPage() {
     .order('created_at', { ascending: false })
     .limit(100)
 
+  // Optional dish selections, fetched for the page's inquiries in one query
+  // and grouped client-side. A separate round trip rather than a nested
+  // select: simpler typing, and the row count is bounded by the limit above.
+  const itemsByInquiry = new Map<string, { name: string; quantity: number }[]>()
+  const ids = (inquiries ?? []).map((inquiry) => inquiry.id)
+  if (ids.length > 0) {
+    const { data: items } = await session.supabase
+      .from('catering_inquiry_items')
+      .select('inquiry_id, dish_name_snapshot, quantity')
+      .in('inquiry_id', ids)
+      .order('created_at')
+    for (const item of items ?? []) {
+      const list = itemsByInquiry.get(item.inquiry_id) ?? []
+      list.push({ name: item.dish_name_snapshot, quantity: item.quantity })
+      itemsByInquiry.set(item.inquiry_id, list)
+    }
+  }
+
   return (
     <>
       <PageHeader title={dict.admin.catering.title} count={inquiries?.length ?? 0} />
 
       {inquiries && inquiries.length > 0 ? (
         <ul className="flex flex-col gap-3">
-          {inquiries.map((inquiry) => (
+          {inquiries.map((inquiry) => {
+            const picked = itemsByInquiry.get(inquiry.id) ?? []
+            return (
             <li key={inquiry.id}>
               <Panel>
                 <div className="flex flex-wrap items-start justify-between gap-3">
@@ -73,6 +93,21 @@ export default async function AdminCateringPage() {
                   </p>
                 ) : null}
 
+                {picked.length > 0 ? (
+                  <div className="mt-3 rounded-xl bg-cream-100/60 p-3">
+                    <p className="text-xs font-semibold tracking-[0.12em] text-ink-subtle uppercase">
+                      {dict.admin.catering.dishes}
+                    </p>
+                    <ul className="mt-1.5 text-sm text-brown-800">
+                      {picked.map((item, index) => (
+                        <li key={`${item.name}-${index}`}>
+                          {item.quantity} × {item.name}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+
                 <form
                   action={updateInquiryStatusAction}
                   className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--color-hairline)] pt-4"
@@ -93,7 +128,8 @@ export default async function AdminCateringPage() {
                 </form>
               </Panel>
             </li>
-          ))}
+            )
+            })}
         </ul>
       ) : (
         <EmptyState message={dict.admin.catering.empty} />

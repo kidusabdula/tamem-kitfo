@@ -107,6 +107,9 @@ export function formatCateringCard(
     CateringInquiry,
     'code' | 'name' | 'phone' | 'email' | 'event_type' | 'event_date' | 'guest_count' | 'location' | 'message'
   >,
+  /** Optional requested dishes. Deliberately without prices: catering is
+   *  quoted per event, and menu prices would mislead the customer. */
+  items: { name: string; quantity: number }[] = [],
 ): string {
   const lines = [
     `<b>🎪 CATERING ${escapeHtml(inquiry.code)}</b>`,
@@ -119,6 +122,15 @@ export function formatCateringCard(
   if (inquiry.event_date) lines.push(`📅 ${escapeHtml(inquiry.event_date)}`)
   if (inquiry.guest_count) lines.push(`👥 ${inquiry.guest_count} guests`)
   if (inquiry.location) lines.push(`📍 ${escapeHtml(inquiry.location)}`)
+
+  if (items.length > 0) {
+    lines.push('')
+    lines.push('<b>📦 Requested dishes:</b>')
+    for (const item of items) {
+      lines.push(`  • ${item.quantity} × ${escapeHtml(item.name)}`)
+    }
+  }
+
   if (inquiry.message) lines.push(`📝 ${escapeHtml(inquiry.message)}`)
   return lines.join('\n')
 }
