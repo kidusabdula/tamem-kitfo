@@ -10,7 +10,15 @@ export default function robots(): MetadataRoute.Robots {
       // The CMS, the API and anything carrying an order code. The order pages
       // also send `noindex` themselves — robots.txt is a request, not a
       // guarantee, and an order receipt must not be indexed either way.
-      disallow: ['/admin', '/api', '/en/order', '/am/order'],
+      disallow: [
+        '/admin',
+        '/api',
+        '/en/order',
+        '/am/order',
+        // Status URLs carry a live request code.
+        '/en/status',
+        '/am/status',
+      ],
     },
     sitemap: `${SITE}/sitemap.xml`,
   }

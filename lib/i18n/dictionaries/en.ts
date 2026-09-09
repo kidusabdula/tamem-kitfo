@@ -183,6 +183,55 @@ export const en = {
     },
   },
 
+  /*
+   * Customer-facing wording for everything this browser has asked us for.
+   * Separate from the identical-looking `admin` blocks on purpose: staff see
+   * "Quoted" and "Lost", and a customer must never be shown either about their
+   * own enquiry. Orders reuse `order.status`, which is already written for
+   * customers.
+   */
+  requests: {
+    title: 'Your requests',
+    eyebrow: 'Check on something',
+    intro: 'Orders, catering enquiries and table bookings you have sent us from this device.',
+    none: 'Nothing from this device yet',
+    noneHint: 'Anything you send us will show up here so you can check on it later.',
+    lookupTitle: 'Find it with a code',
+    lookupHint: 'Ordered on a different phone? Enter the code we gave you and the number you used.',
+    codeLabel: 'Code',
+    phoneLabel: 'Phone number',
+    check: 'Check status',
+    notFound: 'We could not find that. Check the code and the phone number, then try again.',
+    forget: 'Remove from this device',
+    placed: 'Sent',
+    track: 'Check its status',
+    kinds: {
+      order: 'Order',
+      catering: 'Catering enquiry',
+      booking: 'Table booking',
+    },
+    cateringStatus: {
+      new: 'Received',
+      contacted: 'We have been in touch',
+      quoted: 'Quote sent',
+      won: 'Booked',
+      // Never "Lost". The enquiry is closed; the reason belongs in the phone
+      // call the owners make, not in a label on the customer's screen.
+      lost: 'Closed',
+    },
+    bookingStatus: {
+      new: 'Received',
+      confirmed: 'Confirmed',
+      seated: 'Seated',
+      completed: 'Completed',
+      cancelled: 'Cancelled',
+    },
+    guests: 'Guests',
+    party: 'Table for',
+    eventDate: 'Event date',
+    bookingAt: 'Booked for',
+  },
+
   book: {
     title: 'Book a table',
     eyebrow: 'Reservations',
@@ -332,7 +381,6 @@ export const en = {
     closedNow: 'Closed now',
     everyDay: 'Every day',
     mapCta: 'Open in Google Maps',
-    mapTitle: 'Find us',
     mapTitle: 'Find us',
     formTitle: 'Send us a message',
     yourMessage: 'Your message',

@@ -10,8 +10,10 @@ import { Button } from '@/components/ui/button'
 import { Price } from '@/components/ui/bits'
 import { ChoiceCards, Field, Honeypot, Input, Textarea } from '@/components/ui/field'
 import { FormCard, FormError, SuccessPanel, useMinDateTime } from './forms/shared'
+import { MyRequests } from './my-requests'
 import { useCart } from '@/lib/cart/context'
 import { useSubmit } from '@/lib/forms/use-submit'
+import { useRecordRequest } from '@/lib/requests/use-record-request'
 import { orderSchema, type OrderInput } from '@/lib/schemas/forms'
 import type { Dictionary, Locale } from '@/lib/i18n/config'
 import { routes } from '@/lib/routes'
@@ -74,6 +76,23 @@ export function OrderFlow({
     if (isSuccess) clear()
   }, [isSuccess, clear])
 
+  /*
+   * Read the totals before `clear()` empties the cart — by the time the
+   * success panel renders, `lines` is already gone.
+   */
+  const placedSummary = React.useRef<string | undefined>(undefined)
+  if (!isSuccess && lines.length > 0) {
+    placedSummary.current = formatETB(subtotal, locale)
+  }
+
+  useRecordRequest({
+    kind: 'order',
+    isSuccess,
+    code: result?.code,
+    phone: getValues('phone'),
+    summary: placedSummary.current,
+  })
+
   if (isSuccess) {
     return (
       <SuccessPanel
@@ -82,6 +101,8 @@ export function OrderFlow({
         code={result?.code}
         codeLabel={dict.order.yourCode}
         codeHint={dict.order.codeHint}
+        trackHref={result?.code ? routes.requestStatus(locale, result.code) : undefined}
+        trackLabel={dict.requests.track}
       />
     )
   }
@@ -94,13 +115,25 @@ export function OrderFlow({
 
   if (lines.length === 0) {
     return (
-      <div className="rounded-[var(--radius-card)] bg-surface p-12 text-center shadow-[var(--shadow-card)]">
-        <ShoppingBag className="mx-auto size-10 text-brown-300" aria-hidden="true" />
-        <p className="mt-4 font-display text-xl font-semibold text-brown-900">{dict.cart.empty}</p>
-        <p className="mt-2 text-[0.9375rem] text-ink-muted">{dict.cart.emptyHint}</p>
-        <Button asChild className="mt-6">
-          <Link href={routes.menu(locale)}>{dict.actions.viewMenu}</Link>
-        </Button>
+      <div className="mx-auto max-w-2xl">
+        <div className="rounded-[var(--radius-card)] bg-surface p-12 text-center shadow-[var(--shadow-card)]">
+          <ShoppingBag className="mx-auto size-10 text-brown-300" aria-hidden="true" />
+          <p className="mt-4 font-display text-xl font-semibold text-brown-900">{dict.cart.empty}</p>
+          <p className="mt-2 text-[0.9375rem] text-ink-muted">{dict.cart.emptyHint}</p>
+          <Button asChild className="mt-6">
+            <Link href={routes.menu(locale)}>{dict.actions.viewMenu}</Link>
+          </Button>
+        </div>
+
+        {/*
+          A customer who reloads after ordering lands here — the cart was
+          cleared on success, so without this the page reads as though the
+          order never happened. `emptyState={false}`: if there is no history
+          there is nothing to say, and the message above already covers it.
+        */}
+        <div className="mt-10">
+          <MyRequests locale={locale} dict={dict} emptyState={false} />
+        </div>
       </div>
     )
   }
