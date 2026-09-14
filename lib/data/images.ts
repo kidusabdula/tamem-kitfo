@@ -6,6 +6,13 @@ import kitfo4 from '@/assets/images/kitfo-4.jpg'
 import kitfoPro from '@/assets/images/kitfo-pro.jpg'
 import kitfoPro2 from '@/assets/images/kitfo-pro-2.jpg'
 import kitfoServe from '@/assets/images/kitfo-serve.jpg'
+import tibsShekla from '@/assets/images/tibs-shekla.jpg'
+import gomenBesiga from '@/assets/images/gomen-besiga.jpg'
+import tejBerele from '@/assets/images/tej-berele.jpg'
+import coffeeJebena from '@/assets/images/coffee-jebena.jpg'
+import injeraStews from '@/assets/images/injera-stews.jpg'
+import beyaynetu from '@/assets/images/beyaynetu.jpg'
+import genfoBowl from '@/assets/images/genfo-bowl.jpg'
 import view1 from '@/assets/images/view-1.jpg'
 import view2 from '@/assets/images/view-2.jpg'
 import view3 from '@/assets/images/view-3.jpg'
@@ -22,6 +29,13 @@ import sqKitfo4 from '@/assets/images/square/kitfo-4.jpg'
 import sqKitfoPro from '@/assets/images/square/kitfo-pro.jpg'
 import sqKitfoPro2 from '@/assets/images/square/kitfo-pro-2.jpg'
 import sqKitfoServe from '@/assets/images/square/kitfo-serve.jpg'
+import sqTibsShekla from '@/assets/images/square/tibs-shekla.jpg'
+import sqGomenBesiga from '@/assets/images/square/gomen-besiga.jpg'
+import sqTejBerele from '@/assets/images/square/tej-berele.jpg'
+import sqCoffeeJebena from '@/assets/images/square/coffee-jebena.jpg'
+import sqInjeraStews from '@/assets/images/square/injera-stews.jpg'
+import sqBeyaynetu from '@/assets/images/square/beyaynetu.jpg'
+import sqGenfoBowl from '@/assets/images/square/genfo-bowl.jpg'
 import sqView1 from '@/assets/images/square/view-1.jpg'
 import sqView2 from '@/assets/images/square/view-2.jpg'
 import sqView3 from '@/assets/images/square/view-3.jpg'
@@ -40,6 +54,13 @@ export const photos = {
   'kitfo-pro': kitfoPro,
   'kitfo-pro-2': kitfoPro2,
   'kitfo-serve': kitfoServe,
+  'tibs-shekla': tibsShekla,
+  'gomen-besiga': gomenBesiga,
+  'tej-berele': tejBerele,
+  'coffee-jebena': coffeeJebena,
+  'injera-stews': injeraStews,
+  'beyaynetu': beyaynetu,
+  'genfo-bowl': genfoBowl,
   'view-1': view1,
   'view-2': view2,
   'view-3': view3,
@@ -54,6 +75,13 @@ export const squarePhotos = {
   'kitfo-pro': sqKitfoPro,
   'kitfo-pro-2': sqKitfoPro2,
   'kitfo-serve': sqKitfoServe,
+  'tibs-shekla': sqTibsShekla,
+  'gomen-besiga': sqGomenBesiga,
+  'tej-berele': sqTejBerele,
+  'coffee-jebena': sqCoffeeJebena,
+  'injera-stews': sqInjeraStews,
+  'beyaynetu': sqBeyaynetu,
+  'genfo-bowl': sqGenfoBowl,
   'view-1': sqView1,
   'view-2': sqView2,
   'view-3': sqView3,
@@ -79,13 +107,40 @@ export const diningPhoto = photos['view-3']
  * the rest render a typographic card instead. Showing a picture of kitfo next
  * to "Fasting Beyaynetu" would be a lie, and a menu that lies about the food
  * is worse than one with no pictures.
+ *
+ * Two provenances sit in this map, and the difference matters:
+ *
+ * - The kitfo and dulet frames are the restaurant's own commissioned shots.
+ * - The rest are openly licensed photographs of the *dish*, not of our plate
+ *   of it. They are stand-ins that let a customer recognise what they are
+ *   ordering, and every one is credited in docs/photo-credits.md.
+ *
+ * This map is only a fallback: `resolveDishImage` prefers `dishes.image_path`,
+ * so the first photo the owners upload through the CMS silently retires the
+ * stand-in for that dish. Delete the line here once that has happened.
+ *
+ * Two of these needed care rather than just a search:
+ *
+ * - `fasting-beyaynetu` is sold as fully vegan, so the photograph had to be
+ *   one the source explicitly documents as fasting food. Plenty of
+ *   better-composed platters were rejected for showing, or possibly showing,
+ *   meat.
+ * - `bulla-genfo` is northern-style genfo rather than Gurage bulla. The
+ *   presentation the menu describes -- a well of spiced kibbeh in the centre
+ *   -- is exactly what the frame shows.
  */
 export const dishPhotos: Partial<Record<string, StaticImageData>> = {
   'tamem-special-kitfo': sqKitfoPro,
   'gurage-kitfo-clay': sqKitfoPro2,
   'tamem-special-dulet': sqKitfo3,
   'royal-agelgil': sqKitfo2,
-  'honey-tej': sqView2,
+  'shekla-tibs': sqTibsShekla,
+  'gomen-besiga': sqGomenBesiga,
+  'fasting-beyaynetu': sqBeyaynetu,
+  'bulla-genfo': sqGenfoBowl,
+  // Was the bar interior (sqView2), which showed the room rather than the
+  // drink. This is an actual berele of tej, which is what the card is selling.
+  'honey-tej': sqTejBerele,
 }
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''

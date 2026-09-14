@@ -14,7 +14,7 @@ import { requireStaff } from '@/lib/admin/auth'
 import { getStaffDictionary } from '@/lib/admin/locale'
 import { pick, type Dictionary, type Locale } from '@/lib/i18n/config'
 import { resolveDishImage } from '@/lib/data/images'
-import { formatETB } from '@/lib/utils'
+import { cn, formatETB } from '@/lib/utils'
 import type { Dish, MenuCategory } from '@/lib/supabase/database.types'
 import { deleteDishAction, saveCategoryAction, saveDishAction } from '../../actions'
 
@@ -103,54 +103,84 @@ export default async function AdminMenuPage() {
         <ul className="mb-4 flex flex-col gap-2">
           {categories.map((category) => (
             <li key={category.id}>
-              <form action={saveCategoryAction} className="flex flex-wrap items-end gap-2">
-                <input type="hidden" name="id" value={category.id} />
-                <input
-                  name="name_en"
-                  defaultValue={category.name_en}
-                  aria-label={dict.admin.menu.nameEn}
-                  className={`${adminControl} flex-1 min-w-40`}
-                />
-                <input
-                  name="name_am"
-                  defaultValue={category.name_am ?? ''}
-                  aria-label={dict.admin.menu.nameAm}
-                  className={`${adminControl} flex-1 min-w-40`}
-                />
-                <input
-                  name="sort_order"
-                  type="number"
-                  defaultValue={category.sort_order}
-                  aria-label="Sort"
-                  className={`${adminControl} w-20`}
-                />
-                <SubmitButton variant="quiet" pendingLabel={dict.admin.menu.saving}>
-                  {dict.admin.menu.save}
-                </SubmitButton>
-              </form>
+              <CategoryForm dict={dict} category={category} />
             </li>
           ))}
         </ul>
 
-        <form
-          action={saveCategoryAction}
-          className="flex flex-wrap items-end gap-2 border-t border-[var(--color-hairline)] pt-4"
-        >
-          <input
-            name="name_en"
-            placeholder={dict.admin.menu.nameEn}
-            required
-            className={`${adminControl} flex-1 min-w-40`}
-          />
-          <input
-            name="name_am"
-            placeholder={dict.admin.menu.nameAm}
-            className={`${adminControl} flex-1 min-w-40`}
-          />
-          <SubmitButton pendingLabel={dict.admin.menu.saving}>+</SubmitButton>
-        </form>
+        {/*
+          The same row shape, with no id, so the fields a category is created
+          with are exactly the fields it can later be edited with. The previous
+          version omitted sort order here, and saveCategoryAction falls back to
+          0 — so every new category silently sorted above all the existing ones.
+        */}
+        <CategoryForm
+          dict={dict}
+          nextSortOrder={(categories.at(-1)?.sort_order ?? 0) + 10}
+          className="border-t border-[var(--color-hairline)] pt-4"
+        />
       </Panel>
     </>
+  )
+}
+
+/**
+ * One category row, used both to edit an existing category and to create a new
+ * one. Each row is its own form so a save touches only that category — with a
+ * single form around the list, correcting one name would rewrite all of them.
+ *
+ * Labels are visually hidden rather than absent: the column is obvious to
+ * someone looking at the screen and invisible to someone using a screen reader,
+ * so every control carries an aria-label from the dictionary.
+ */
+function CategoryForm({
+  dict,
+  category,
+  nextSortOrder,
+  className,
+}: {
+  dict: Dictionary
+  category?: MenuCategory
+  /** Create mode: where a brand new category should sort. */
+  nextSortOrder?: number
+  className?: string
+}) {
+  const t = dict.admin.menu
+  const isEdit = Boolean(category)
+
+  return (
+    <form action={saveCategoryAction} className={cn('flex flex-wrap items-end gap-2', className)}>
+      {category ? <input type="hidden" name="id" value={category.id} /> : null}
+
+      <input
+        name="name_en"
+        defaultValue={category?.name_en}
+        placeholder={isEdit ? undefined : t.nameEn}
+        required
+        aria-label={t.nameEn}
+        className={cn(adminControl, 'flex-1 min-w-40')}
+      />
+      <input
+        name="name_am"
+        lang="am"
+        defaultValue={category?.name_am ?? ''}
+        placeholder={isEdit ? undefined : t.nameAm}
+        aria-label={t.nameAm}
+        className={cn(adminControl, 'flex-1 min-w-40')}
+      />
+      <input
+        name="sort_order"
+        type="number"
+        inputMode="numeric"
+        defaultValue={category?.sort_order ?? nextSortOrder ?? 0}
+        aria-label={t.sortOrder}
+        className={cn(adminControl, 'w-20')}
+      />
+
+      <SubmitButton variant={isEdit ? 'quiet' : undefined} pendingLabel={t.saving}>
+        {isEdit ? t.save : t.addCategory}
+      </SubmitButton>
+    </form>
   )
 }
 

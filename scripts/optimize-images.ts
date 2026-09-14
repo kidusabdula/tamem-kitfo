@@ -84,16 +84,53 @@ console.log('\nDone. Import these from "@/assets/images/..." so next/image can o
 const SQUARE_DIR = `${OUTPUT_DIR}/square`
 const SQUARE_EDGE = 1200
 
+/**
+ * Hand-placed crop windows, in *master* pixels (i.e. after the 2400px resize
+ * above), for photographs where `attention` picks the wrong subject.
+ *
+ * The strategy maximises saturation and edge density, which is exactly right
+ * for a studio shot where the food is the only thing in frame. It fails on a
+ * photograph taken in a busy room: on the sourced dish photos it locked onto
+ * a cafe window, a patterned sleeve and a stack of bare injera, cropping the
+ * actual dish out of its own picture.
+ *
+ * Recording the window here rather than correcting it with CSS object-position
+ * keeps the fix inside the pipeline: `pnpm images` reproduces the identical
+ * crop on any machine, and re-aiming a swapped photo is a one-line edit.
+ */
+const SQUARE_CROPS: Record<string, { left: number; top: number; side: number }> = {
+  // The mesob and its spread; the right of the frame is cloth and shadow.
+  'beyaynetu.jpg': { left: 100, top: 280, side: 1000 },
+  // Centre the bowl, which sits small in a large dark field.
+  'genfo-bowl.jpg': { left: 562, top: 13, side: 1300 },
+  // Frame the brazier: rosemary at the top, glowing charcoal vent at the base.
+  'tibs-shekla.jpg': { left: 100, top: 300, side: 1200 },
+  // The served tray. The wide shot reads as two mostly empty plates.
+  'gomen-besiga.jpg': { left: 1024, top: 520, side: 1000 },
+  // Full height, so the berele keeps its silhouette instead of reading as juice.
+  'tej-berele.jpg': { left: 0, top: 350, side: 1800 },
+}
+
 await mkdir(SQUARE_DIR, { recursive: true })
-console.log('\nSquare crops (attention-centred on the subject):')
+console.log('\nSquare crops (attention-centred unless listed in SQUARE_CROPS):')
 
 for (const entry of await readdir(OUTPUT_DIR, { withFileTypes: true })) {
   if (!entry.isFile() || !/\.jpg$/i.test(entry.name)) continue
   const from = join(OUTPUT_DIR, entry.name)
   const to = join(SQUARE_DIR, entry.name)
-  await sharp(from)
-    .resize(SQUARE_EDGE, SQUARE_EDGE, { fit: 'cover', position: sharp.strategy.attention })
+  const window = SQUARE_CROPS[entry.name]
+
+  const pipe = sharp(from)
+  if (window) {
+    pipe.extract({ left: window.left, top: window.top, width: window.side, height: window.side })
+  }
+
+  await pipe
+    .resize(SQUARE_EDGE, SQUARE_EDGE, {
+      fit: 'cover',
+      ...(window ? {} : { position: sharp.strategy.attention }),
+    })
     .jpeg({ quality: QUALITY, mozjpeg: true, chromaSubsampling: '4:4:4' })
     .toFile(to)
-  console.log(`  ${entry.name}`)
+  console.log(`  ${entry.name}${window ? '  (hand-placed)' : ''}`)
 }

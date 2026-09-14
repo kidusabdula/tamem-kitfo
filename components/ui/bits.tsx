@@ -79,7 +79,9 @@ export function Badge({
   const tones = {
     accent: 'bg-ember-100 text-accent-ink',
     neutral: 'bg-brown-100 text-brown-700',
-    green: 'bg-gomen/12 text-gomen',
+    // Opaque, not bg-gomen/12: this badge sits over dish photography, and a
+    // 12% tint disappeared entirely against a pale injera.
+    green: 'bg-gomen-100 text-gomen',
   } as const
   return (
     <span

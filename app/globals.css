@@ -38,6 +38,9 @@
   --color-berbere: oklch(0.53 0.17 30);
   --color-mitmita: oklch(0.62 0.19 35);
   --color-gomen: oklch(0.52 0.09 145);
+  /* Opaque tint for the fasting badge. A translucent green vanished when
+     the card behind it gained a photograph. */
+  --color-gomen-100: oklch(0.94 0.04 145);
   --color-tej: oklch(0.72 0.14 85);
 
   /* --- Semantic aliases (the API components actually use) --- */

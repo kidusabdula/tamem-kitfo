@@ -58,6 +58,10 @@ export function RestaurantSchema({
         ? 'በቦሌ የሚገኘው ታዋቂው የጉራጌ ክትፎ ቤት።'
         : 'The famous Gurage kitfo house in Bole, Addis Ababa.',
     servesCuisine: ['Ethiopian', 'Gurage'],
+    // Google lists `image` as required for a Restaurant rich result, and drops
+    // the whole card without it. Reusing the share image keeps one picture to
+    // maintain, and it is already a 1200x630 the crawlers accept.
+    image: `${siteUrl}/og-cover.jpg`,
     url: siteUrl,
     telephone: settings.phones[0],
     email: settings.email ?? undefined,

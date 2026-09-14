@@ -74,10 +74,13 @@ export default async function AdminBookingsPage() {
                   className="mt-4 border-t border-[var(--color-hairline)] pt-4"
                 >
                   <input type="hidden" name="id" value={booking.id} />
+                  <input type="hidden" name="next" value="/admin/bookings" />
                   <StatusSelect
+                    key={`${booking.id}:${booking.status}`}
                     name="status"
                     value={booking.status}
                     saveLabel={dict.admin.menu.save}
+                    label={dict.admin.bookings.status}
                     options={STATUSES.map((value) => ({
                       value,
                       label: dict.admin.bookings.statuses[value],
