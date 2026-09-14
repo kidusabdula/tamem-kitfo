@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { AdminNav, LocaleSwitch } from '@/components/admin/shell'
+import { AdminHeaderActions, AdminNav } from '@/components/admin/shell'
 import { Panel } from '@/components/admin/bits'
 import { requireStaff } from '@/lib/admin/auth'
 import { getStaffDictionary } from '@/lib/admin/locale'
@@ -29,34 +29,28 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <header className="border-b border-brown-200/70 bg-cream-50">
-        <div className="container-page flex flex-wrap items-center justify-between gap-2 py-3">
-          <Link href="/admin" className="font-display text-lg font-semibold text-brown-900">
-            {dict.admin.title}
+      <header className="border-b border-hairline bg-canvas">
+        <div className="container-page flex h-16 flex-wrap items-center justify-between gap-3">
+          <Link href="/admin" className="min-w-0">
+            <span className="block truncate font-display text-lg leading-none font-semibold tracking-tight text-brown-900">
+              {dict.admin.title}
+            </span>
+            <span className="mt-1 hidden text-[0.625rem] font-medium tracking-[0.16em] text-ink-subtle uppercase sm:block">
+              {dict.admin.dashboard.title}
+            </span>
           </Link>
-          <div className="flex items-center gap-1">
-            <Link
-              href="/"
-              className="min-h-11 rounded-xl px-3 text-sm font-semibold text-brown-700 hover:bg-brown-100/70 max-sm:hidden"
-            >
-              {dict.admin.backToSite}
-            </Link>
-            <LocaleSwitch locale={locale} action={setStaffLocaleAction} />
-            <form action={signOutAction}>
-              <button
-                type="submit"
-                className="min-h-11 rounded-xl px-3 text-sm font-semibold text-brown-700 hover:bg-brown-100/70"
-              >
-                {dict.admin.signOut}
-              </button>
-            </form>
-          </div>
+          <AdminHeaderActions
+            locale={locale}
+            dict={dict}
+            setStaffLocaleAction={setStaffLocaleAction}
+            signOutAction={signOutAction}
+          />
         </div>
       </header>
 
       <AdminNav dict={dict} newOrders={count ?? 0} />
 
-      <main className="container-page flex-1 py-7">
+      <main className="container-page flex-1 py-8">
         {/*
           Signed in, but no staff_profiles row. RLS will already be returning
           nothing; explaining why beats eight blank tables.

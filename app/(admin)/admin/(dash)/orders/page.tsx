@@ -41,6 +41,7 @@ export default async function OrdersPage({
   const { data: orders } = await query
 
   const typeLabel = dict.order.fulfilmentOptions
+  const returnPath = active === 'all' ? '/admin/orders' : `/admin/orders?status=${active}`
 
   return (
     <>
@@ -132,10 +133,13 @@ export default async function OrdersPage({
                   className="mt-4 border-t border-[var(--color-hairline)] pt-4"
                 >
                   <input type="hidden" name="id" value={order.id} />
+                  <input type="hidden" name="next" value={returnPath} />
                   <StatusSelect
+                    key={`${order.id}:${order.status}`}
                     name="status"
                     value={order.status}
                     saveLabel={dict.admin.menu.save}
+                    label={dict.admin.orders.status}
                     options={(['new', 'confirmed', 'preparing', 'completed', 'cancelled'] as const).map(
                       (value) => ({ value, label: dict.order.status[value] }),
                     )}

@@ -546,6 +546,8 @@ export const am: Dictionary = {
       confirmDelete: 'ይህን ምግብ ይሰረዝ? ያለፉ ትዕዛዞች የራሳቸውን መዝገብ ይይዛሉ።',
       empty: 'እስካሁን ምግብ የለም።',
       hidden: 'የተደበቀ',
+      sortOrder: 'ቅደም ተከተል',
+      addCategory: 'ምድብ ጨምር',
     },
 
     gallery: {

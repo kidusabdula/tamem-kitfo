@@ -28,8 +28,20 @@ export default async function AdminRootLayout({ children }: { children: React.Re
   const { locale } = await getStaffDictionary()
 
   return (
-    <html lang={htmlLang[locale]} className={fontVariables}>
-      <body className="min-h-dvh bg-cream-50 antialiased">{children}</body>
+    <html lang={htmlLang[locale]} className={fontVariables} suppressHydrationWarning>
+      <head>
+        {/*
+          Same opt-in mechanism the public site uses for scroll reveals: without
+          this attribute, CSS never hides any content and the admin screens stay
+          fully readable even when JavaScript fails.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "document.documentElement.dataset.js='1'",
+          }}
+        />
+      </head>
+      <body className="min-h-dvh bg-canvas text-ink antialiased">{children}</body>
     </html>
   )
 }

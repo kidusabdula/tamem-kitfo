@@ -1,4 +1,13 @@
-import { AdminField, PageHeader, Panel, SubmitButton, Toggle, adminControl } from '@/components/admin/bits'
+import {
+  HoursEditor,
+  PageHeader,
+  Panel,
+  PanelSection,
+  SubmitButton,
+  TextAreaField,
+  TextField,
+  Toggle,
+} from '@/components/admin/bits'
 import { requireStaff } from '@/lib/admin/auth'
 import { getStaffDictionary } from '@/lib/admin/locale'
 import { getSettings } from '@/lib/data/queries'
@@ -16,11 +25,11 @@ export default async function AdminSettingsPage() {
   // the singleton row has been filled in.
   const settings = await getSettings()
 
-  const dayLabel = DAY_LABELS[locale]
+  const t = dict.admin.settings
 
   return (
     <>
-      <PageHeader title={dict.admin.settings.title} />
+      <PageHeader title={t.title} />
 
       <form action={saveSettingsAction} className="flex flex-col gap-5">
         {/*
@@ -31,138 +40,73 @@ export default async function AdminSettingsPage() {
         <Panel>
           <Toggle
             name="is_accepting_orders"
-            label={dict.admin.settings.acceptingOrders}
-            hint={dict.admin.settings.acceptingHint}
+            label={t.acceptingOrders}
+            hint={t.acceptingHint}
             defaultChecked={settings.is_accepting_orders}
           />
         </Panel>
 
         <Panel className="grid gap-4 sm:grid-cols-2">
-          <AdminField
-            label={dict.admin.settings.phones}
-            htmlFor="phones"
-            hint={dict.admin.settings.phonesHint}
+          <TextAreaField
+            name="phones"
+            label={t.phones}
+            hint={t.phonesHint}
+            rows={3}
+            mono
+            defaultValue={settings.phones.join('\n')}
             className="sm:col-span-2"
-          >
-            <textarea
-              id="phones"
-              name="phones"
-              rows={3}
-              defaultValue={settings.phones.join('\n')}
-              className={`${adminControl} resize-y font-mono`}
-            />
-          </AdminField>
+          />
 
-          <AdminField label={dict.admin.settings.whatsapp} htmlFor="whatsapp_number">
-            <input
-              id="whatsapp_number"
-              name="whatsapp_number"
-              type="tel"
-              defaultValue={settings.whatsapp_number ?? ''}
-              className={adminControl}
-            />
-          </AdminField>
+          <TextField
+            name="whatsapp_number"
+            label={t.whatsapp}
+            type="tel"
+            defaultValue={settings.whatsapp_number}
+          />
 
-          <AdminField label={dict.admin.settings.email} htmlFor="email">
-            <input
-              id="email"
-              name="email"
-              type="email"
-              defaultValue={settings.email ?? ''}
-              className={adminControl}
-            />
-          </AdminField>
+          <TextField name="email" label={t.email} type="email" defaultValue={settings.email} />
 
-          <AdminField label={dict.admin.settings.addressEn} htmlFor="address_en">
-            <textarea
-              id="address_en"
-              name="address_en"
-              rows={2}
-              defaultValue={settings.address_en ?? ''}
-              className={`${adminControl} resize-y`}
-            />
-          </AdminField>
+          <TextAreaField name="address_en" label={t.addressEn} defaultValue={settings.address_en} />
 
-          <AdminField label={dict.admin.settings.addressAm} htmlFor="address_am">
-            <textarea
-              id="address_am"
-              name="address_am"
-              rows={2}
-              lang="am"
-              defaultValue={settings.address_am ?? ''}
-              className={`${adminControl} resize-y`}
-            />
-          </AdminField>
+          <TextAreaField
+            name="address_am"
+            label={t.addressAm}
+            lang="am"
+            defaultValue={settings.address_am}
+          />
 
-          <AdminField
-            label={dict.admin.settings.mapUrl}
-            htmlFor="map_url"
+          <TextField
+            name="map_url"
+            label={t.mapUrl}
+            type="url"
+            inputMode="url"
+            defaultValue={settings.map_url}
             className="sm:col-span-2"
-          >
-            <input
-              id="map_url"
-              name="map_url"
-              type="url"
-              inputMode="url"
-              defaultValue={settings.map_url ?? ''}
-              className={adminControl}
-            />
-          </AdminField>
+          />
         </Panel>
 
-        <Panel>
-          <p className="text-sm font-semibold text-brown-900">{dict.admin.settings.hours}</p>
-          <p className="mt-1 mb-4 text-xs text-ink-subtle">{dict.admin.settings.hoursHint}</p>
-
-          <ul className="flex flex-col gap-2">
-            {DAYS.map((day) => {
-              const window = settings.hours[day] ?? null
-              return (
-                <li key={day} className="flex flex-wrap items-center gap-2">
-                  <span className="w-24 shrink-0 text-sm font-medium text-brown-800">
-                    {dayLabel[day]}
-                  </span>
-                  <input
-                    type="time"
-                    name={`hours_${day}_open`}
-                    defaultValue={window?.[0] ?? ''}
-                    aria-label={`${dayLabel[day]} — ${dict.admin.settings.opens}`}
-                    className={`${adminControl} w-32`}
-                  />
-                  <span className="text-ink-subtle">–</span>
-                  <input
-                    type="time"
-                    name={`hours_${day}_close`}
-                    defaultValue={window?.[1] ?? ''}
-                    aria-label={`${dayLabel[day]} — ${dict.admin.settings.closes}`}
-                    className={`${adminControl} w-32`}
-                  />
-                </li>
-              )
-            })}
-          </ul>
-        </Panel>
+        <PanelSection title={t.hours} hint={t.hoursHint}>
+          <HoursEditor
+            days={DAYS}
+            dayLabel={DAY_LABELS[locale]}
+            hours={settings.hours}
+            opensLabel={t.opens}
+            closesLabel={t.closes}
+          />
+        </PanelSection>
 
         <Panel className="grid gap-4 sm:grid-cols-2">
-          <AdminField label={dict.admin.settings.deliveryNoteEn} htmlFor="delivery_note_en">
-            <textarea
-              id="delivery_note_en"
-              name="delivery_note_en"
-              rows={2}
-              defaultValue={settings.delivery_note_en ?? ''}
-              className={`${adminControl} resize-y`}
-            />
-          </AdminField>
-          <AdminField label={dict.admin.settings.deliveryNoteAm} htmlFor="delivery_note_am">
-            <textarea
-              id="delivery_note_am"
-              name="delivery_note_am"
-              rows={2}
-              lang="am"
-              defaultValue={settings.delivery_note_am ?? ''}
-              className={`${adminControl} resize-y`}
-            />
-          </AdminField>
+          <TextAreaField
+            name="delivery_note_en"
+            label={t.deliveryNoteEn}
+            defaultValue={settings.delivery_note_en}
+          />
+          <TextAreaField
+            name="delivery_note_am"
+            label={t.deliveryNoteAm}
+            lang="am"
+            defaultValue={settings.delivery_note_am}
+          />
         </Panel>
 
         <SubmitButton

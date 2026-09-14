@@ -113,10 +113,13 @@ export default async function AdminCateringPage() {
                   className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--color-hairline)] pt-4"
                 >
                   <input type="hidden" name="id" value={inquiry.id} />
+                  <input type="hidden" name="next" value="/admin/catering" />
                   <StatusSelect
+                    key={`${inquiry.id}:${inquiry.status}`}
                     name="status"
                     value={inquiry.status}
                     saveLabel={dict.admin.menu.save}
+                    label={dict.admin.catering.status}
                     options={STATUSES.map((value) => ({
                       value,
                       label: dict.admin.catering.statuses[value],

@@ -556,6 +556,8 @@ export const en = {
       confirmDelete: 'Delete this dish? Past orders keep their own record of it.',
       empty: 'No dishes yet.',
       hidden: 'Hidden',
+      sortOrder: 'Order',
+      addCategory: 'Add category',
     },
 
     gallery: {
