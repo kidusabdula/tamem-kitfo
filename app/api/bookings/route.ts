@@ -12,7 +12,7 @@ import {
   rateLimited,
   serverError,
 } from '@/lib/api/guard'
-import { formatBookingCard } from '@/lib/telegram/format'
+import { bookingButtons, formatBookingCard } from '@/lib/telegram/format'
 import { sendTelegramMessage } from '@/lib/telegram/send'
 import { generateCode } from '@/lib/utils'
 
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
       notes: booking.notes,
       locale: booking.locale,
     })
-    .select('code, name, phone, party_size, booking_at, notes')
+    .select('id, code, name, phone, party_size, booking_at, notes, status')
     .single()
 
   if (error || !created) {
@@ -55,7 +55,10 @@ export async function POST(request: Request) {
     return serverError()
   }
 
-  await sendTelegramMessage(formatBookingCard(created))
+  await sendTelegramMessage(
+    formatBookingCard(created),
+    bookingButtons(created.id, created.status),
+  )
 
   return ok({ code: created.code })
 }

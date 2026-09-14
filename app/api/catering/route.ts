@@ -12,7 +12,7 @@ import {
   rateLimited,
   serverError,
 } from '@/lib/api/guard'
-import { formatCateringCard } from '@/lib/telegram/format'
+import { cateringButtons, formatCateringCard } from '@/lib/telegram/format'
 import { sendTelegramMessage } from '@/lib/telegram/send'
 import { generateCode } from '@/lib/utils'
 
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
       message: inquiry.message,
       locale: inquiry.locale,
     })
-    .select('id, code, name, phone, email, event_type, event_date, guest_count, location, message')
+    .select('id, code, name, phone, email, event_type, event_date, guest_count, location, message, status')
     .single()
 
   if (error || !created) {
@@ -111,7 +111,12 @@ export async function POST(request: Request) {
     }
   }
 
-  await sendTelegramMessage(formatCateringCard(created, telegramItems))
+  // Buttons carry the row id, so staff can move the enquiry along the pipeline
+  // from the group chat without opening the CMS.
+  await sendTelegramMessage(
+    formatCateringCard(created, telegramItems),
+    cateringButtons(created.id, created.status),
+  )
 
   return ok({ code: created.code })
 }

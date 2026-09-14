@@ -2,7 +2,9 @@ import 'server-only'
 import { escapeHtml, type InlineButton } from './send'
 import { formatAddisTime } from '@/lib/hours'
 import type {
+  BookingStatus,
   CateringInquiry,
+  InquiryStatus,
   OrderStatus,
   TableBooking,
 } from '@/lib/supabase/database.types'
@@ -22,6 +24,27 @@ const STATUS_LABEL: Record<OrderStatus, string> = {
   new: '🆕 New',
   confirmed: '✅ Confirmed',
   preparing: '👨‍🍳 Preparing',
+  completed: '🎉 Completed',
+  cancelled: '❌ Cancelled',
+}
+
+/**
+ * Staff-facing wording, so it matches the CMS board rather than the softened
+ * labels a customer sees on /status. "Lost" is a real outcome the owners need
+ * to be able to record; the customer-facing dictionary renames it to "Closed".
+ */
+const INQUIRY_STATUS_LABEL: Record<InquiryStatus, string> = {
+  new: '🆕 New',
+  contacted: '📞 Contacted',
+  quoted: '💰 Quoted',
+  won: '🎉 Won',
+  lost: '❌ Lost',
+}
+
+const BOOKING_STATUS_LABEL: Record<BookingStatus, string> = {
+  new: '🆕 New',
+  confirmed: '✅ Confirmed',
+  seated: '🪑 Seated',
   completed: '🎉 Completed',
   cancelled: '❌ Cancelled',
 }
@@ -102,10 +125,59 @@ export function orderButtons(orderId: string, status: OrderStatus): InlineButton
   return rows
 }
 
+/**
+ * Catering moves along a sales pipeline rather than a kitchen queue, so the
+ * buttons follow the CMS board: each tap advances one step, and "Lost" stays
+ * reachable at every stage because an enquiry can die at any point.
+ */
+export function cateringButtons(id: string, status: InquiryStatus): InlineButton[][] {
+  if (status === 'won' || status === 'lost') return []
+
+  const next: Partial<Record<InquiryStatus, InlineButton>> = {
+    new: { text: '📞 Contacted', callback_data: `catering:${id}:contacted` },
+    contacted: { text: '💰 Quoted', callback_data: `catering:${id}:quoted` },
+    quoted: { text: '🎉 Won', callback_data: `catering:${id}:won` },
+  }
+
+  const advance = next[status]
+  const row: InlineButton[] = advance ? [advance] : []
+  row.push({ text: '❌ Lost', callback_data: `catering:${id}:lost` })
+  return [row]
+}
+
+export function bookingButtons(id: string, status: BookingStatus): InlineButton[][] {
+  if (status === 'completed' || status === 'cancelled') return []
+
+  const rows: InlineButton[][] = []
+  if (status === 'new') {
+    rows.push([
+      { text: '✅ Confirm', callback_data: `booking:${id}:confirmed` },
+      { text: '❌ Cancel', callback_data: `booking:${id}:cancelled` },
+    ])
+  } else if (status === 'confirmed') {
+    rows.push([
+      { text: '🪑 Seated', callback_data: `booking:${id}:seated` },
+      { text: '❌ Cancel', callback_data: `booking:${id}:cancelled` },
+    ])
+  } else if (status === 'seated') {
+    rows.push([{ text: '🎉 Completed', callback_data: `booking:${id}:completed` }])
+  }
+  return rows
+}
+
 export function formatCateringCard(
   inquiry: Pick<
     CateringInquiry,
-    'code' | 'name' | 'phone' | 'email' | 'event_type' | 'event_date' | 'guest_count' | 'location' | 'message'
+    | 'code'
+    | 'name'
+    | 'phone'
+    | 'email'
+    | 'event_type'
+    | 'event_date'
+    | 'guest_count'
+    | 'location'
+    | 'message'
+    | 'status'
   >,
   /** Optional requested dishes. Deliberately without prices: catering is
    *  quoted per event, and menu prices would mislead the customer. */
@@ -113,6 +185,7 @@ export function formatCateringCard(
 ): string {
   const lines = [
     `<b>🎪 CATERING ${escapeHtml(inquiry.code)}</b>`,
+    INQUIRY_STATUS_LABEL[inquiry.status],
     '',
     `👤 ${escapeHtml(inquiry.name)}`,
     `📞 <a href="tel:${escapeHtml(inquiry.phone)}">${escapeHtml(inquiry.phone)}</a>`,
@@ -136,10 +209,14 @@ export function formatCateringCard(
 }
 
 export function formatBookingCard(
-  booking: Pick<TableBooking, 'code' | 'name' | 'phone' | 'party_size' | 'booking_at' | 'notes'>,
+  booking: Pick<
+    TableBooking,
+    'code' | 'name' | 'phone' | 'party_size' | 'booking_at' | 'notes' | 'status'
+  >,
 ): string {
   const lines = [
     `<b>🪑 TABLE ${escapeHtml(booking.code)}</b>`,
+    BOOKING_STATUS_LABEL[booking.status],
     '',
     `👤 ${escapeHtml(booking.name)}`,
     `📞 <a href="tel:${escapeHtml(booking.phone)}">${escapeHtml(booking.phone)}</a>`,
