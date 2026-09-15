@@ -179,8 +179,8 @@ export const fixtureDishes: Dish[] = [
 
 export const fixtureSettings: SiteSettings = {
   id: true,
-  phones: ['+251116670707'],
-  whatsapp_number: '+251116670707',
+  phones: ['+251952372030'],
+  whatsapp_number: '+251952372030',
   email: 'info@tamemkitfo.com',
   address_en: 'Bole Dabi Complex, Ground Floor, opposite Ramada Hotel, Bole, Addis Ababa',
   address_am: 'ቦሌ ዳቢ ኮምፕሌክስ፣ ምድር ቤት፣ ከራማዳ ሆቴል ፊት ለፊት፣ ቦሌ፣ አዲስ አበባ',
