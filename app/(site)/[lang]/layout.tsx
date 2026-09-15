@@ -116,7 +116,7 @@ export default async function SiteLayout({
         </a>
 
         <CartProvider>
-          <SiteHeader locale={locale} dict={dict} />
+          <SiteHeader locale={locale} dict={dict} settings={settings} />
           {children}
           <SiteFooter locale={locale} dict={dict} settings={settings} />
         </CartProvider>

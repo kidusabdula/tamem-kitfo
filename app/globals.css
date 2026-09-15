@@ -188,6 +188,23 @@
   }
 }
 
+/*
+ * Clears the fixed site header.
+ *
+ * The header is fixed, so its height is not in flow and every page that starts
+ * below it has to subtract the same number by hand. That number used to be
+ * pasted into each of those pages as `pt-18`, which meant the header could not
+ * change height without silently breaking them. It lives here now.
+ *
+ * The desktop value also clears the utility strip above the nav row.
+ */
+@utility header-offset {
+  padding-top: 4.5rem;
+  @media (width >= 64rem) {
+    padding-top: 6.75rem;
+  }
+}
+
 @utility container-page {
   width: 100%;
   margin-inline: auto;
