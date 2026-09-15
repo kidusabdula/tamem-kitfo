@@ -174,7 +174,7 @@ Do this once, then test it in section C.
 
 Everything below is transcribed from the previous vendor's unverified site.
 
-☐ Phone `+251116670707`
+☐ Phone `+251952372030`
 ☐ Address `Bole Dabi Complex, Ground Floor, opposite Ramada Hotel`
 ☐ Hours `07:00 – 23:30 every day`
 ☐ All 9 dish names and prices
