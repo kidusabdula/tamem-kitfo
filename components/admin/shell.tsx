@@ -88,7 +88,7 @@ export function AdminHeaderActions({
   const languageLabel = next === 'am' ? 'አማርኛ' : 'English'
 
   return (
-    <div className="flex items-center gap-1.5 sm:gap-2">
+    <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
       <Button asChild variant="ghost" size="sm" className={headerButton}>
         <Link href="/" title={dict.admin.backToSite}>
           <ExternalLink aria-hidden="true" />
