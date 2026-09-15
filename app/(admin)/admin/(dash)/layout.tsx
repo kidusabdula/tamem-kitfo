@@ -30,7 +30,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div className="flex min-h-dvh flex-col">
       <header className="border-b border-hairline bg-canvas">
-        <div className="container-page flex h-16 flex-wrap items-center justify-between gap-3">
+        {/*
+          min-h-16 rather than h-16. The row is allowed to wrap, and a fixed
+          height cannot contain two rows: below about 380px the title and the
+          buttons wrapped and then overflowed a 64px box, so the header read as
+          cramped with no padding on exactly the phones staff use.
+        */}
+        <div className="container-page flex min-h-16 flex-wrap items-center justify-between gap-x-3 gap-y-2 py-2.5">
           <Link href="/admin" className="min-w-0">
             <span className="block truncate font-display text-lg leading-none font-semibold tracking-tight text-brown-900">
               {dict.admin.title}
