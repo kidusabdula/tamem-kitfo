@@ -13,7 +13,7 @@ export default function NotFound() {
   const dict = getDictionary(defaultLocale)
 
   return (
-    <main id="main" className="grid min-h-dvh place-items-center bg-canvas px-6 pt-18">
+    <main id="main" className="grid min-h-dvh place-items-center bg-canvas px-6 header-offset">
       <div className="flex max-w-md flex-col items-center text-center">
         <p className="font-display text-7xl font-semibold text-brown-200">404</p>
         <h1 className="mt-4 font-display text-3xl font-semibold text-brown-900">

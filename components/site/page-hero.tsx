@@ -20,7 +20,7 @@ export function PageHero({
 }) {
   return (
     <>
-      <section className="relative flex min-h-[52vh] items-end overflow-hidden pt-18">
+      <section className="relative flex min-h-[52vh] items-end overflow-hidden header-offset">
         <Image
           src={image}
           alt=""

@@ -69,6 +69,19 @@ export function SiteFooter({
                 {dict.nav.book}
               </Link>
             </li>
+            {/*
+              Footer rather than the header: someone checking on an order they
+              already placed is not in a hurry, and the header's job is to sell
+              food. It is here so it exists on every page.
+            */}
+            <li>
+              <Link
+                href={routes.requests(locale)}
+                className="text-[0.9375rem] text-cream-200/75 transition-colors hover:text-ember-300"
+              >
+                {dict.requests.title}
+              </Link>
+            </li>
           </ul>
         </nav>
 

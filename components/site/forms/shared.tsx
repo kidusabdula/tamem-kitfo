@@ -1,7 +1,8 @@
 'use client'
 
 import * as React from 'react'
-import { CheckCircle2, AlertCircle, MessageCircle } from 'lucide-react'
+import Link from 'next/link'
+import { ArrowRight, CheckCircle2, AlertCircle, MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { DiamondRule } from '@/components/ui/tibeb'
 import { buildWhatsAppLink } from '@/lib/whatsapp'
@@ -13,12 +14,17 @@ export function SuccessPanel({
   code,
   codeLabel,
   codeHint,
+  trackHref,
+  trackLabel,
 }: {
   title: string
   body: string
   code?: string
   codeLabel?: string
   codeHint?: string
+  /** Where to check this request later. Omit and only the code is shown. */
+  trackHref?: string
+  trackLabel?: string
 }) {
   return (
     <div
@@ -42,6 +48,21 @@ export function SuccessPanel({
           </p>
           {codeHint ? <p className="mt-2 text-xs text-ink-subtle">{codeHint}</p> : null}
         </div>
+      ) : null}
+
+      {/*
+        "Keep this code" is advice most people ignore, and a screenshot is
+        easily lost. This browser has already remembered the code and the
+        phone, so the link goes straight to live status with nothing to type.
+      */}
+      {trackHref && trackLabel ? (
+        <Link
+          href={trackHref}
+          className="mt-7 inline-flex items-center gap-2 rounded-full border border-brown-300 px-5 py-2.5 text-sm font-semibold text-brown-800 transition-colors hover:border-brown-800 hover:text-brown-950"
+        >
+          {trackLabel}
+          <ArrowRight className="size-4" aria-hidden="true" />
+        </Link>
       ) : null}
     </div>
   )

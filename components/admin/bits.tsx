@@ -42,7 +42,7 @@ export function Panel({
   return (
     <div
       className={cn(
-        'rounded-2xl border border-brown-200/70 bg-surface p-5 shadow-[var(--shadow-card)]',
+        'rounded-2xl border border-hairline bg-surface p-5 shadow-[var(--shadow-card)] transition-colors',
         className,
       )}
     >
@@ -61,10 +61,12 @@ export function EmptyState({ message }: { message: string }) {
 
 export function Stat({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
-    <Panel>
+    <Panel className="hover:border-brown-300">
       <p className="text-xs font-semibold tracking-[0.14em] text-ink-subtle uppercase">{label}</p>
-      <p className="mt-2 font-display text-3xl font-semibold text-brown-900">{value}</p>
-      {hint ? <p className="mt-1 text-xs text-ink-subtle">{hint}</p> : null}
+      <p className="mt-3 font-display text-3xl font-semibold tracking-tight text-brown-900 tabular-nums">
+        {value}
+      </p>
+      {hint ? <p className="mt-2 text-xs text-ink-subtle">{hint}</p> : null}
     </Panel>
   )
 }
@@ -138,28 +140,54 @@ export function SubmitButton({
 }
 
 /**
- * A status dropdown that submits the moment it changes — one tap instead of
- * select-then-press-save. Falls back to a visible Save button when JavaScript
- * is not running, so the form still works.
+ * Status dropdown that submits the moment it changes — one tap instead of
+ * select-then-press-save.
+ *
+ * It is controlled, not uncontrolled, so the browser widget stays mapped to
+ * the order row's canonical status after the server action revalidates the
+ * page. Falls back to a visible Save button when JavaScript is not running.
  */
 export function StatusSelect({
   name,
   value,
   options,
   saveLabel,
+  label,
 }: {
   name: string
   value: string
   options: { value: string; label: string }[]
   saveLabel: string
+  label?: string
 }) {
+  const { pending } = useFormStatus()
+  const [selected, setSelected] = React.useState(value)
+
+  React.useEffect(() => {
+    setSelected(value)
+  }, [value])
+
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2">
+      {label ? (
+        <span className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-subtle">
+          {label}
+        </span>
+      ) : null}
       <select
         name={name}
-        defaultValue={value}
-        onChange={(event) => event.currentTarget.form?.requestSubmit()}
-        className="min-h-11 rounded-xl border border-brown-200 bg-surface px-3 text-sm text-ink hover:border-brown-300 focus:border-accent-ink focus:outline-none"
+        value={selected}
+        aria-label={label}
+        disabled={pending}
+        onChange={(event) => {
+          const next = event.currentTarget.value
+          setSelected(next)
+          if (!pending) event.currentTarget.form?.requestSubmit()
+        }}
+        className={cn(
+          'min-h-11 rounded-xl border border-hairline bg-surface px-3 text-sm font-medium text-brown-800',
+          'hover:border-brown-300 focus:border-accent-ink focus:outline-none disabled:opacity-60',
+        )}
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -167,6 +195,12 @@ export function StatusSelect({
           </option>
         ))}
       </select>
+      {pending ? (
+        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-ink-subtle">
+          <span className="size-2 animate-pulse rounded-full bg-accent" aria-hidden="true" />
+          {saveLabel}…
+        </span>
+      ) : null}
       <noscript>
         <button
           type="submit"
@@ -234,6 +268,157 @@ export function AdminField({
 export const adminControl =
   'min-h-11 w-full rounded-xl border border-brown-200 bg-surface px-3 py-2 text-sm text-ink ' +
   'placeholder:text-ink-subtle/70 hover:border-brown-300 focus:border-accent-ink focus:outline-none'
+
+/**
+ * Label-plus-control pairs.
+ *
+ * The settings form was eleven repetitions of AdminField wrapping a bare input
+ * with `adminControl` pasted on by hand. That is the shape a styling mistake
+ * hides in: one field missing the class, or one `id` that no longer matches its
+ * `htmlFor`, looks fine in review and silently breaks the label association.
+ *
+ * These render exactly the same markup, with `id` derived from `name` so the
+ * two can never drift apart.
+ */
+export function TextField({
+  name,
+  label,
+  hint,
+  type = 'text',
+  inputMode,
+  defaultValue,
+  lang,
+  className,
+}: {
+  name: string
+  label: string
+  hint?: string
+  type?: 'text' | 'tel' | 'email' | 'url' | 'number'
+  inputMode?: 'text' | 'tel' | 'email' | 'url' | 'numeric'
+  defaultValue?: string | number | null
+  lang?: string
+  className?: string
+}) {
+  return (
+    <AdminField label={label} htmlFor={name} hint={hint} className={className}>
+      <input
+        id={name}
+        name={name}
+        type={type}
+        inputMode={inputMode}
+        lang={lang}
+        defaultValue={defaultValue ?? ''}
+        className={adminControl}
+      />
+    </AdminField>
+  )
+}
+
+export function TextAreaField({
+  name,
+  label,
+  hint,
+  rows = 2,
+  defaultValue,
+  lang,
+  mono = false,
+  className,
+}: {
+  name: string
+  label: string
+  hint?: string
+  rows?: number
+  defaultValue?: string | null
+  lang?: string
+  /** Monospace, for values that are one-per-line rather than prose. */
+  mono?: boolean
+  className?: string
+}) {
+  return (
+    <AdminField label={label} htmlFor={name} hint={hint} className={className}>
+      <textarea
+        id={name}
+        name={name}
+        rows={rows}
+        lang={lang}
+        defaultValue={defaultValue ?? ''}
+        className={cn(adminControl, 'resize-y', mono && 'font-mono')}
+      />
+    </AdminField>
+  )
+}
+
+/**
+ * One opening window per day.
+ *
+ * A day left blank means closed, which is why these are two plain time inputs
+ * rather than a range control: "closed" has to be as easy to express as a pair
+ * of times, and clearing both fields is the most obvious way to say it.
+ */
+export function HoursEditor({
+  days,
+  dayLabel,
+  hours,
+  opensLabel,
+  closesLabel,
+}: {
+  days: readonly string[]
+  dayLabel: Record<string, string>
+  hours: Record<string, [string, string] | null | undefined>
+  opensLabel: string
+  closesLabel: string
+}) {
+  return (
+    <ul className="flex flex-col gap-2">
+      {days.map((day) => {
+        const window = hours[day] ?? null
+        return (
+          <li key={day} className="flex flex-wrap items-center gap-2">
+            <span className="w-24 shrink-0 text-sm font-medium text-brown-800">
+              {dayLabel[day]}
+            </span>
+            <input
+              type="time"
+              name={`hours_${day}_open`}
+              defaultValue={window?.[0] ?? ''}
+              aria-label={`${dayLabel[day]} — ${opensLabel}`}
+              className={cn(adminControl, 'w-32')}
+            />
+            <span className="text-ink-subtle">–</span>
+            <input
+              type="time"
+              name={`hours_${day}_close`}
+              defaultValue={window?.[1] ?? ''}
+              aria-label={`${dayLabel[day]} — ${closesLabel}`}
+              className={cn(adminControl, 'w-32')}
+            />
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
+
+/** A panel whose contents are introduced by a heading and a line of guidance. */
+export function PanelSection({
+  title,
+  hint,
+  className,
+  children,
+}: {
+  title: string
+  hint?: string
+  className?: string
+  children: React.ReactNode
+}) {
+  return (
+    <Panel className={className}>
+      <p className="text-sm font-semibold text-brown-900">{title}</p>
+      {hint ? <p className="mt-1 mb-4 text-xs text-ink-subtle">{hint}</p> : null}
+      {children}
+    </Panel>
+  )
+}
 
 export function Toggle({
   name,

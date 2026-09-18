@@ -183,6 +183,55 @@ export const en = {
     },
   },
 
+  /*
+   * Customer-facing wording for everything this browser has asked us for.
+   * Separate from the identical-looking `admin` blocks on purpose: staff see
+   * "Quoted" and "Lost", and a customer must never be shown either about their
+   * own enquiry. Orders reuse `order.status`, which is already written for
+   * customers.
+   */
+  requests: {
+    title: 'Your requests',
+    eyebrow: 'Check on something',
+    intro: 'Orders, catering enquiries and table bookings you have sent us from this device.',
+    none: 'Nothing from this device yet',
+    noneHint: 'Anything you send us will show up here so you can check on it later.',
+    lookupTitle: 'Find it with a code',
+    lookupHint: 'Ordered on a different phone? Enter the code we gave you and the number you used.',
+    codeLabel: 'Code',
+    phoneLabel: 'Phone number',
+    check: 'Check status',
+    notFound: 'We could not find that. Check the code and the phone number, then try again.',
+    forget: 'Remove from this device',
+    placed: 'Sent',
+    track: 'Check its status',
+    kinds: {
+      order: 'Order',
+      catering: 'Catering enquiry',
+      booking: 'Table booking',
+    },
+    cateringStatus: {
+      new: 'Received',
+      contacted: 'We have been in touch',
+      quoted: 'Quote sent',
+      won: 'Booked',
+      // Never "Lost". The enquiry is closed; the reason belongs in the phone
+      // call the owners make, not in a label on the customer's screen.
+      lost: 'Closed',
+    },
+    bookingStatus: {
+      new: 'Received',
+      confirmed: 'Confirmed',
+      seated: 'Seated',
+      completed: 'Completed',
+      cancelled: 'Cancelled',
+    },
+    guests: 'Guests',
+    party: 'Table for',
+    eventDate: 'Event date',
+    bookingAt: 'Booked for',
+  },
+
   book: {
     title: 'Book a table',
     eyebrow: 'Reservations',
@@ -215,6 +264,56 @@ export const en = {
         body: 'Green beans roasted in the room, with frankincense and popcorn, run properly to three rounds.',
       },
     },
+    process: {
+      eyebrow: 'How it works',
+      title: 'From the first call to the last cup',
+      body: 'Four steps, and we carry everything in between.',
+      steps: {
+        ask: {
+          title: 'Tell us the day',
+          body: 'The date, roughly how many guests, and where. A phone call is usually quicker than the form and reaches the same people.',
+        },
+        menu: {
+          title: 'We build the menu',
+          body: 'We talk through the dishes, how much of each, and the fasting options your guests will need. Nothing is fixed until it sounds right to you.',
+        },
+        setup: {
+          title: 'We arrive and set up',
+          body: 'Chefs, clay pans, mesob and the coffee station travel with us. We are in place and ready before the first guest walks in.',
+        },
+        serve: {
+          title: 'We serve, then clear away',
+          body: 'The kitfo is mixed in front of your guests and the coffee runs to the third round. Afterwards the kitchen goes back into the van and your space is left as we found it.',
+        },
+      },
+    },
+    occasions: {
+      eyebrow: 'What we cater',
+      title: 'Gatherings we know well',
+      body: 'Every room has its own rhythm. These are the ones this kitchen has cooked for the longest.',
+      items: {
+        wedding: {
+          title: 'Weddings',
+          body: 'The long table, the agelgil, and enough kitfo that nobody counts. We work alongside your hall and keep the coffee going while the speeches run over.',
+        },
+        mahiber: {
+          title: 'Mahiber',
+          body: 'A monthly gathering has its own order of service. We cook to it rather than around it, and we know when to stay out of the way.',
+        },
+        corporate: {
+          title: 'Office & corporate',
+          body: 'A lunch that arrives on time and does not need a second hour. Good for a team day, a launch, or visitors you want to feed properly.',
+        },
+        birthday: {
+          title: 'Birthdays',
+          body: 'Smaller rooms, family and neighbours, and a menu that suits both the elders and the children at the same table.',
+        },
+        memorial: {
+          title: 'Memorials',
+          body: 'Tezkar asks for quiet, generous food and no fuss from the people serving it. We arrive early, work softly, and leave when it is finished.',
+        },
+      },
+    },
     formTitle: 'Tell us about your event',
     eventType: 'What is the occasion?',
     eventTypes: {
@@ -230,6 +329,9 @@ export const en = {
     location: 'Where is it?',
     message: 'Anything else',
     email: 'Email (optional)',
+    dishesTitle: 'Dishes you would like',
+    dishesHint:
+      'Optional. Rough amounts are fine — we confirm exact quantities and price together by phone.',
     successTitle: 'Enquiry sent',
     successBody: 'Our catering team will call you to talk through the menu and pricing.',
   },
@@ -282,6 +384,7 @@ export const en = {
     closedNow: 'Closed now',
     everyDay: 'Every day',
     mapCta: 'Open in Google Maps',
+    mapTitle: 'Find us',
     formTitle: 'Send us a message',
     yourMessage: 'Your message',
     successTitle: 'Message sent',
@@ -400,6 +503,7 @@ export const en = {
       guests: 'Guests',
       location: 'Location',
       message: 'Message',
+      dishes: 'Requested dishes',
       status: 'Status',
       empty: 'No inquiries yet.',
       statuses: {
@@ -452,6 +556,8 @@ export const en = {
       confirmDelete: 'Delete this dish? Past orders keep their own record of it.',
       empty: 'No dishes yet.',
       hidden: 'Hidden',
+      sortOrder: 'Order',
+      addCategory: 'Add category',
     },
 
     gallery: {

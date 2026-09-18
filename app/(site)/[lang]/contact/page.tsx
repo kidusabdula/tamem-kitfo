@@ -2,12 +2,12 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { Clock, Mail, MapPin, Phone } from 'lucide-react'
 
-import { Button } from '@/components/ui/button'
 import { Reveal } from '@/components/ui/reveal'
 import { Section } from '@/components/ui/section'
 import { DiamondRule } from '@/components/ui/tibeb'
 import { PlainHero } from '@/components/site/page-hero'
 import { OpenStatus } from '@/components/site/open-status'
+import { DirectionsCard } from '@/components/site/directions-card'
 import { ContactForm } from '@/components/site/forms/contact-form'
 import { getSettings } from '@/lib/data/queries'
 import { getDictionary, isLocale, pick, type Locale } from '@/lib/i18n/config'
@@ -107,13 +107,6 @@ export default async function ContactPage({ params }: { params: Promise<{ lang: 
               </InfoRow>
             </dl>
 
-            {settings.map_url ? (
-              <Button asChild variant="outline" className="mt-8">
-                <a href={settings.map_url} target="_blank" rel="noreferrer noopener">
-                  {dict.contact.mapCta}
-                </a>
-              </Button>
-            ) : null}
           </Reveal>
 
           <Reveal index={1}>
@@ -121,6 +114,19 @@ export default async function ContactPage({ params }: { params: Promise<{ lang: 
               locale={locale}
               dict={dict}
               whatsappNumber={settings.whatsapp_number ?? settings.phones[0] ?? null}
+            />
+          </Reveal>
+        </div>
+
+        {/* Below the two columns — full width, stacked last so it never pushes
+            the form below the fold on mobile. */}
+        <div className="container-page">
+          <Reveal index={2} className="mt-12">
+            <DirectionsCard
+              title={dict.contact.mapTitle}
+              address={pick(settings, 'address', locale)}
+              mapUrl={settings.map_url}
+              ctaLabel={dict.contact.mapCta}
             />
           </Reveal>
         </div>

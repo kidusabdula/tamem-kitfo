@@ -50,6 +50,19 @@ const BOOKING_STATUSES: readonly BookingStatus[] = [
 ]
 const GALLERY_CATEGORIES: readonly GalleryCategory[] = ['food', 'dining', 'events', 'drinks']
 
+function safeAdminPath(path: string, fallback: string): string {
+  if (!path.startsWith(fallback) || path.startsWith('//')) return fallback
+  return path
+}
+
+function revalidateAdminPath(path: string, fallback: string): string {
+  const safe = safeAdminPath(path, fallback)
+  const [base] = safe.split('?')
+  revalidatePath(base ?? fallback)
+  revalidatePath('/admin')
+  return safe
+}
+
 /* ------------------------------------------------------------------ helpers */
 
 function str(form: FormData, key: string): string {
@@ -139,6 +152,7 @@ export async function updateOrderStatusAction(formData: FormData) {
 
   const id = str(formData, 'id')
   const status = str(formData, 'status') as OrderStatus
+  const returnPath = safeAdminPath(str(formData, 'next'), '/admin/orders')
   if (!id || !ORDER_STATUSES.includes(status)) return
 
   const { data: order, error } = await session.supabase
@@ -182,8 +196,8 @@ export async function updateOrderStatusAction(formData: FormData) {
     )
   }
 
-  revalidatePath('/admin/orders')
-  revalidatePath('/admin')
+  revalidateAdminPath(returnPath, '/admin/orders')
+  redirect(returnPath)
 }
 
 export async function updateInquiryStatusAction(formData: FormData) {
@@ -192,11 +206,20 @@ export async function updateInquiryStatusAction(formData: FormData) {
 
   const id = str(formData, 'id')
   const status = str(formData, 'status') as InquiryStatus
+  const returnPath = safeAdminPath(str(formData, 'next'), '/admin/catering')
   if (!id || !INQUIRY_STATUSES.includes(status)) return
 
-  await session.supabase.from('catering_inquiries').update({ status }).eq('id', id)
-  revalidatePath('/admin/catering')
-  revalidatePath('/admin')
+  const { error } = await session.supabase
+    .from('catering_inquiries')
+    .update({ status })
+    .eq('id', id)
+  if (error) {
+    console.error('[admin] inquiry status update failed:', error)
+    return
+  }
+
+  revalidateAdminPath(returnPath, '/admin/catering')
+  redirect(returnPath)
 }
 
 export async function updateBookingStatusAction(formData: FormData) {
@@ -205,11 +228,20 @@ export async function updateBookingStatusAction(formData: FormData) {
 
   const id = str(formData, 'id')
   const status = str(formData, 'status') as BookingStatus
+  const returnPath = safeAdminPath(str(formData, 'next'), '/admin/bookings')
   if (!id || !BOOKING_STATUSES.includes(status)) return
 
-  await session.supabase.from('table_bookings').update({ status }).eq('id', id)
-  revalidatePath('/admin/bookings')
-  revalidatePath('/admin')
+  const { error } = await session.supabase
+    .from('table_bookings')
+    .update({ status })
+    .eq('id', id)
+  if (error) {
+    console.error('[admin] booking status update failed:', error)
+    return
+  }
+
+  revalidateAdminPath(returnPath, '/admin/bookings')
+  redirect(returnPath)
 }
 
 /* ------------------------------------------------------------------ menu */

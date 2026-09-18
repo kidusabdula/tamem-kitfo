@@ -38,6 +38,9 @@
   --color-berbere: oklch(0.53 0.17 30);
   --color-mitmita: oklch(0.62 0.19 35);
   --color-gomen: oklch(0.52 0.09 145);
+  /* Opaque tint for the fasting badge. A translucent green vanished when
+     the card behind it gained a photograph. */
+  --color-gomen-100: oklch(0.94 0.04 145);
   --color-tej: oklch(0.72 0.14 85);
 
   /* --- Semantic aliases (the API components actually use) --- */
@@ -182,6 +185,23 @@
     opacity: 1;
     transform: none;
     transition: none;
+  }
+}
+
+/*
+ * Clears the fixed site header.
+ *
+ * The header is fixed, so its height is not in flow and every page that starts
+ * below it has to subtract the same number by hand. That number used to be
+ * pasted into each of those pages as `pt-18`, which meant the header could not
+ * change height without silently breaking them. It lives here now.
+ *
+ * The desktop value also clears the utility strip above the nav row.
+ */
+@utility header-offset {
+  padding-top: 4.5rem;
+  @media (width >= 64rem) {
+    padding-top: 6.75rem;
   }
 }
 

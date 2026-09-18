@@ -26,8 +26,12 @@ export const orderSchema = z
     name: nameSchema,
     phone: phoneSchema,
     fulfilment_type: z.enum(['dine_in', 'pickup', 'delivery']),
-    scheduled_for: z.string().optional().transform((v) => v || null),
-    delivery_address: z.string().trim().max(400).optional().transform((v) => v || null),
+    // `.nullish()` on every optional field that transforms to null — the
+    // client-side resolver runs this schema first and sends the transformed
+    // output back in, so the server must accept its own nulls. (See
+    // notesSchema in ./common for the full story.)
+    scheduled_for: z.string().nullish().transform((v) => v || null),
+    delivery_address: z.string().trim().max(400).nullish().transform((v) => v || null),
     notes: notesSchema,
     items: z.array(orderItemSchema).min(1, { message: 'cartEmpty' }),
     locale: localeSchema,
@@ -45,6 +49,18 @@ export type OrderPayload = z.output<typeof orderSchema>
    CATERING
    =========================================================================== */
 
+/**
+ * Optional dish selection for a catering enquiry. Quantity ceiling is 2000,
+ * not the order schema's 50: catering quantities are portions for events up
+ * to the guest_count ceiling, not plates for one table. Slugs only — the
+ * server resolves names from the database, exactly like orders, so a client
+ * can never name a dish we do not sell.
+ */
+export const cateringItemSchema = z.object({
+  slug: z.string().min(1).max(120),
+  quantity: z.coerce.number().int().min(1).max(2000),
+})
+
 export const cateringSchema = z.object({
   name: nameSchema,
   phone: phoneSchema,
@@ -58,6 +74,7 @@ export const cateringSchema = z.object({
     .max(2000, { message: 'guestsRange' }),
   location: z.string({ message: 'locationRequired' }).trim().min(2, { message: 'locationRequired' }).max(300),
   message: notesSchema,
+  items: z.array(cateringItemSchema).max(30).nullish().transform((v) => v ?? []),
   locale: localeSchema,
   website: honeypotSchema,
 })
@@ -92,7 +109,7 @@ export type BookingPayload = z.output<typeof bookingSchema>
 
 export const contactSchema = z.object({
   name: nameSchema,
-  phone: z.string().trim().max(40).optional().transform((v) => v || null),
+  phone: z.string().trim().max(40).nullish().transform((v) => v || null),
   email: optionalEmailSchema,
   message: z
     .string({ message: 'messageRequired' })

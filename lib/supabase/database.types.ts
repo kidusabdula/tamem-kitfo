@@ -282,6 +282,24 @@ export interface Database {
         Update: never
         Relationships: []
       }
+      catering_inquiry_items: {
+        Row: {
+          id: string
+          inquiry_id: string
+          dish_id: string | null
+          dish_name_snapshot: string
+          quantity: number
+          created_at: string
+        }
+        Insert: {
+          inquiry_id: string
+          dish_id?: string | null
+          dish_name_snapshot: string
+          quantity: number
+        }
+        Update: never
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: {
@@ -311,9 +329,11 @@ export type SiteContent = T['site_content']['Row']
 export type Order = T['orders']['Row']
 export type OrderItem = T['order_items']['Row']
 export type CateringInquiry = T['catering_inquiries']['Row']
+export type CateringInquiryItem = T['catering_inquiry_items']['Row']
 export type TableBooking = T['table_bookings']['Row']
 export type ContactMessage = T['contact_messages']['Row']
 export type StaffProfile = T['staff_profiles']['Row']
 
 export type OrderWithItems = Order & { order_items: OrderItem[] }
+export type CateringInquiryWithItems = CateringInquiry & { catering_inquiry_items: CateringInquiryItem[] }
 export type DishWithCategory = Dish & { menu_categories: Pick<MenuCategory, 'slug' | 'name_en' | 'name_am'> | null }

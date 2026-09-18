@@ -14,8 +14,22 @@ Next.js 16 App Router · TypeScript strict · Tailwind v4 · Supabase · Telegra
 ```bash
 npm install
 cp .env.example .env.local     # fill in, or leave empty — see below
-npm run dev                    # http://localhost:3000
+npm run dev                    # http://localhost:3100
 ```
+
+**The dev port is pinned to 3100 on purpose — do not change it back to 3000.**
+Browsers key service workers, cache storage and site data to an *origin*, not
+to a project, and `localhost:3000` is shared by every JS project on the
+machine. A service worker some other project registered there kept replaying
+its own cached `/_next/*` chunks into this app, which produced a page whose
+server HTML and client bundle disagreed: hydration mismatches, a stale
+`images.qualities` warning, and a language switch that worked once and then
+stopped. It survived hard refreshes, `.next` wipes, dev-server restarts and
+incognito, because none of those touch browser storage for the origin. A
+project-specific port is its own origin and cannot inherit any of it.
+
+If you ever need to clear the old origin: DevTools → Application → Storage →
+Clear site data, with *Unregister service workers* ticked.
 
 **The site runs with no environment variables at all.** Every public read goes
 through `lib/data/queries.ts`, which catches any Supabase error and serves the
@@ -27,7 +41,7 @@ CMS. Those say so explicitly rather than failing silently.
 
 | Command | |
 |---|---|
-| `npm run dev` | Dev server |
+| `npm run dev` | Dev server on **port 3100** (see above — not 3000) |
 | `npm run build` | Production build |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run images` | Regenerate `assets/images` from `assets/source` originals |

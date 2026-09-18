@@ -122,7 +122,7 @@ export const fixtureDishes: Dish[] = [
     name_en: 'Royal Agelgil',
     name_am: 'የታሜም አገልግል',
     description_en:
-      'A feast for the table, served inside a traditional leather agelgil wrapped in enset leaves: kitfo, tibs, doro wat, ayib and kocho.',
+      'A feast for the table, served inside a traditional koba agelgil wrapped in enset leaves: kitfo, tibs, doro wat, ayib and kocho.',
     description_am:
       'ለማዕድ የሚሆን ድግስ፤ በእንሰት ቅጠል ተጠቅልሎ በባህላዊ አገልግል ውስጥ ይቀርባል፦ ክትፎ፣ ጥብስ፣ ዶሮ ወጥ፣ አይብና ቆጮ።',
     price_etb: 1450,
@@ -179,8 +179,8 @@ export const fixtureDishes: Dish[] = [
 
 export const fixtureSettings: SiteSettings = {
   id: true,
-  phones: ['+251116670707'],
-  whatsapp_number: '+251116670707',
+  phones: ['+251952372030'],
+  whatsapp_number: '+251952372030',
   email: 'info@tamemkitfo.com',
   address_en: 'Bole Dabi Complex, Ground Floor, opposite Ramada Hotel, Bole, Addis Ababa',
   address_am: 'ቦሌ ዳቢ ኮምፕሌክስ፣ ምድር ቤት፣ ከራማዳ ሆቴል ፊት ለፊት፣ ቦሌ፣ አዲስ አበባ',

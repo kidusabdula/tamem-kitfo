@@ -35,7 +35,7 @@ export const phoneSchema = z
 
 export const optionalEmailSchema = z
   .union([z.literal(''), z.email({ message: 'emailInvalid' })])
-  .optional()
+  .nullish()
   .transform((v) => (v ? v : null))
 
 export const localeSchema = z.enum(['en', 'am']).default('en')
@@ -50,7 +50,20 @@ export const honeypotSchema = z
   .optional()
   .or(z.literal('').optional())
 
-export const notesSchema = z.string().trim().max(1000).optional().transform((v) => v || null)
+/**
+ * Optional free-text. `.nullish()`, not `.optional()`: the client validates the
+ * form through this same schema (standard-schema resolver), whose transform
+ * turns ''/undefined into null — and JSON.stringify keeps null. A plain
+ * `.optional()` rejects the null the client itself just produced, so every
+ * submit with an empty optional field died with a 400 the dictionary could
+ * not even name.
+ */
+export const notesSchema = z
+  .string()
+  .trim()
+  .max(1000)
+  .nullish()
+  .transform((v) => v || null)
 
 /** A future date, tolerant of the client's clock being a few hours off. */
 export const futureDateSchema = z

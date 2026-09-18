@@ -26,6 +26,16 @@ const LIMITS: Record<string, { max: number; windowMinutes: number }> = {
   catering: { max: 4, windowMinutes: 30 },
   booking: { max: 5, windowMinutes: 30 },
   contact: { max: 4, windowMinutes: 30 },
+  /*
+   * Checking your own order is not a submission, and people refresh it.
+   * Without an entry here this fell to the 5-per-30-minutes default, which a
+   * customer exhausts in five taps — and Ethiopian mobile carriers use CGNAT
+   * heavily, so a whole neighbourhood can share one apparent IP.
+   *
+   * Still nowhere near brute-forcible: a code is four characters from a
+   * 24-letter alphabet (331,776 combinations) AND the phone must match.
+   */
+  lookup: { max: 20, windowMinutes: 15 },
 }
 
 /**

@@ -66,7 +66,7 @@ insert into dishes (
     'royal-agelgil',
     (select id from menu_categories where slug = 'tibs'),
     'Royal Agelgil', 'የታሜም አገልግል',
-    'A feast for the table, served inside a traditional leather agelgil wrapped in enset leaves: kitfo, tibs, doro wat, ayib and kocho.',
+    'A feast for the table, served inside a traditional koba agelgil wrapped in enset leaves: kitfo, tibs, doro wat, ayib and kocho.',
     'ለማዕድ የሚሆን ድግስ፤ በእንሰት ቅጠል ተጠቅልሎ በባህላዊ አገልግል ውስጥ ይቀርባል፦ ክትፎ፣ ጥብስ፣ ዶሮ ወጥ፣ አይብና ቆጮ።',
     1450, 2, '{sharing}', true, 20
   ),

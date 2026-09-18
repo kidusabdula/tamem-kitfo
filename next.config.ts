@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: '*.supabase.co', pathname: '/storage/v1/object/public/**' },
     ],
     formats: ['image/avif', 'image/webp'],
+    // Next 16 rejects any quality not listed here. 75 is the default for
+    // every image; 88 is reserved for the homepage hero (next.config only,
+    // set in app/(site)/[lang]/page.tsx), which fills the viewport on every
+    // first visit and earns the extra bytes.
+    qualities: [75, 88],
   },
   // typedRoutes is off: every public URL is built from a locale template
   // (`/${lang}/menu`) by lib/routes.ts, which typed routes cannot narrow.

@@ -85,7 +85,15 @@ export default async function SiteLayout({
   const settings = await getSettings()
 
   return (
-    <html lang={htmlLang[locale]} className={fontVariables}>
+    <html
+      lang={htmlLang[locale]}
+      className={fontVariables}
+      // The inline script below stamps data-js="1" on this element before
+      // first paint — that is the scroll-reveal opt-in mechanism, and it
+      // necessarily differs from the server HTML. Suppressed here only;
+      // everything below still gets full mismatch checking.
+      suppressHydrationWarning
+    >
       <head>
         {/*
           Runs before first paint. Its only job is to tell CSS that JavaScript
@@ -108,7 +116,7 @@ export default async function SiteLayout({
         </a>
 
         <CartProvider>
-          <SiteHeader locale={locale} dict={dict} />
+          <SiteHeader locale={locale} dict={dict} settings={settings} />
           {children}
           <SiteFooter locale={locale} dict={dict} settings={settings} />
         </CartProvider>
